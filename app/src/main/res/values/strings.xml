@@ -5,5 +5,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_pushup_counter">PushupCounter</string>
+    <string name="pushups">0</string>
 
 </resources>
