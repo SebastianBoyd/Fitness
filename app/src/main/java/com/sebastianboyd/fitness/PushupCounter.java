@@ -18,11 +18,15 @@ public class PushupCounter extends ActionBarActivity implements SensorEventListe
     private int Pushups = 0;
     private float range;
     private TextView currentPushups;
+    static final String STATE_PUSHUPS = "player_score";
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            Pushups = savedInstanceState.getInt(STATE_PUSHUPS);
+        }
         setContentView(R.layout.activity_pushup_counter);
         currentPushups = new TextView(this);
         currentPushups = (TextView)findViewById(R.id.pushupsText);
@@ -32,16 +36,25 @@ public class PushupCounter extends ActionBarActivity implements SensorEventListe
 
 
     }
+
+    @Override
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    @Override
     protected void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt(STATE_PUSHUPS, Pushups);
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -50,7 +63,6 @@ public class PushupCounter extends ActionBarActivity implements SensorEventListe
         String out = String.valueOf(Pushups);
 
         currentPushups.setText(out);
-
 
     }
 
