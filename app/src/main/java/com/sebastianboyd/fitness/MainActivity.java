@@ -54,6 +54,7 @@ public class MainActivity extends ActionBarActivity {
         mClient = new GoogleApiClient.Builder(this)
                 .addApi(Fitness.API)
                 .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
+                .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
                 .addConnectionCallbacks(
                         new GoogleApiClient.ConnectionCallbacks() {
 
