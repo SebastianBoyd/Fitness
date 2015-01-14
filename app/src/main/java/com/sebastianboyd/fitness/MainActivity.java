@@ -91,6 +91,7 @@ public class MainActivity extends ActionBarActivity {
                             }
                         }
                 )
+
                 .addOnConnectionFailedListener(
                         new GoogleApiClient.OnConnectionFailedListener() {
                             // Called whenever the API client fails to connect.
