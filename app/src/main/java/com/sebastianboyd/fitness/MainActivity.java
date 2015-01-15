@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity {
         // Create the Google API Client
         mClient = new GoogleApiClient.Builder(this)
                 .addApi(Fitness.API)
-                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
+                .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
                 .addConnectionCallbacks(
                         new GoogleApiClient.ConnectionCallbacks() {
@@ -123,6 +123,7 @@ public class MainActivity extends ActionBarActivity {
                 )
                 .build();
     }
+    /**
     // Setting a start and end date using a range of 1 week before this moment.
     DataReadRequest readRequest = new DataReadRequest.Builder()
             // The data request can specify multiple data types to return, effectively
@@ -138,7 +139,7 @@ public class MainActivity extends ActionBarActivity {
             // Replace 0 and 1 with startTime and endTime
             .setTimeRange(0, 1, TimeUnit.MILLISECONDS)
             .build();
-
+    **/
     @Override
     protected void onStart() {
         super.onStart();

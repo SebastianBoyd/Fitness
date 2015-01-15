@@ -60,10 +60,23 @@ public class PushupCounter extends ActionBarActivity implements SensorEventListe
     public void onSensorChanged(SensorEvent event) {
         float in = event.values[0];
         if (in < range) Pushups++;
+        updatePushups();
+
+    }
+    public void updatePushups(){
+        if (Pushups < 0) Pushups = 0;
         String out = String.valueOf(Pushups);
-
         currentPushups.setText(out);
+    }
 
+    public void addPushup(View view) {
+        Pushups++;
+        updatePushups();
+    }
+
+    public void removePushup(View view) {
+        Pushups--;
+        updatePushups();
     }
 
     @Override
