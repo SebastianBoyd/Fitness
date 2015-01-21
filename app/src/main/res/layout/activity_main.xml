@@ -25,4 +25,13 @@
                   style="@style/Text.Label.AddExercise"
                   android:text="@string/add_jumps_button" />
     </LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:id="@+id/life"
+            android:layout_below="@+id/addJumpsContainer"
+            android:layout_centerHorizontal="true"
+            android:textSize="50sp"/>
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -15,7 +16,10 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
+import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
 
@@ -120,13 +124,13 @@ public class MainActivity extends ActionBarActivity {
                 .build();
     }
 
-    protected void getData() {
+    protected DataReadResult getData() {
         // Setting a start and end date using a range of 1 week before this moment.
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
         long endTime = cal.getTimeInMillis();
-        cal.add(Calendar.WEEK_OF_YEAR, -1);
+        cal.add(Calendar.DAY_OF_YEAR, 0);
         long startTime = cal.getTimeInMillis();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -139,15 +143,30 @@ public class MainActivity extends ActionBarActivity {
                 // In this example, it's very unlikely that the request is for several hundred
                 // datapoints each consisting of a few steps and a timestamp.  The more likely
                 // scenario is wanting to see how many steps were walked per day, for 7 days.
-                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .aggregate(DataType.TYPE_CALORIES_EXPENDED, DataType.AGGREGATE_STEP_COUNT_DELTA)
                         // Analogous to a "Group By" in SQL, defines how data should be aggregated.
                         // bucketByTime allows for a time span, whereas bucketBySession would allow
                         // bucketing by "sessions", which would need to be defined in code.
                 .bucketByTime(1, TimeUnit.DAYS)
                 .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                 .build();
-        DataReadResult dataReadResult =
-                Fitness.HistoryApi.readData(mClient, readRequest).await(1, TimeUnit.MINUTES);
+        return Fitness.HistoryApi.readData(mClient, readRequest).await(1, TimeUnit.MINUTES);
+    }
+
+    protected void addData() {
+
+    }
+
+    protected void calculateLife() {
+        setContentView(R.layout.activity_pushup_counter);
+        TextView life;
+        life = (TextView)findViewById(R.id.life);
+        life.setText("Hello");
+
+    }
+
+    protected void calculateMoney() {
+
     }
 
     @Override
@@ -163,6 +182,22 @@ public class MainActivity extends ActionBarActivity {
         super.onStop();
         if (mClient.isConnected()) {
             mClient.disconnect();
+        }
+    }
+
+    private void dumpDataSet(DataSet dataSet) {
+        Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+
+        for (DataPoint dp : dataSet.getDataPoints()) {
+            Log.i(TAG, "Data point:");
+            Log.i(TAG, "\tType: " + dp.getDataType().getName());
+            Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+            Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
+            for(Field field : dp.getDataType().getFields()) {
+                Log.i(TAG, "\tField: " + field.getName() +
+                           " Value: " + dp.getValue(field));
+            }
         }
     }
 
@@ -209,6 +244,11 @@ public class MainActivity extends ActionBarActivity {
 
     public void startPushups(View view){
         Intent intent = new Intent(this, PushupCounter.class);
+        startActivity(intent);
+    }
+
+    public void startJumps(View view){
+        Intent intent = new Intent(this, JumpingJack.class);
         startActivity(intent);
     }
 }
