@@ -2,6 +2,8 @@
 <resources>
     <color name="primary">#FF009687</color>
     <color name="primary_dark">#FF007667</color>
+    <color name="touch_accent">#AFFF</color>
+    <color name="window_background">#EEE</color>
 
     <color name="pushups">#FF2294F2</color>
     <color name="jumps">#FF693BB8</color>

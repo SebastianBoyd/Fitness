@@ -2,6 +2,7 @@ package com.sebastianboyd.fitness;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class MainActivity extends ActionBarActivity {
      */
     private static final String AUTH_PENDING = "auth_state_pending";
     private static final String TAG = "Fit Auth";
+
     private boolean authInProgress = false;
     private GoogleApiClient mClient = null;
     Calendar cal = Calendar.getInstance();

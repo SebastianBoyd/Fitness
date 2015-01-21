@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" 
+          android:constantSize="true" >
+    <item>
+        <ripple android:color="@color/dark_grey">
+            <item android:drawable="@drawable/shape_rect_windowbg" />
+        </ripple>
+    </item>
+</selector>

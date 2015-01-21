@@ -1,2 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Button.Round"
+           parent="Widget.AppCompat.Toolbar.Button.Navigation">
+    </style>
+
+    <style name="Button.Round.Small">
+        <item name="android:layout_width">@dimen/button_round_small_diameter</item>
+        <item name="android:layout_height">@dimen/button_round_small_diameter</item>
+        <item name="android:layout_margin">@dimen/button_round_small_margins</item>
+    </style>
+
+    <style name="Button.Round.Small.Pushups">
+        <item name="android:background">@drawable/shape_oval_pushups</item>
+    </style>
+
+    <style name="Button.Round.Small.Jumps">
+        <item name="android:background">@drawable/shape_oval_jumps</item>
+    </style>
+
+    <style name="Text.Label"
+           parent="Base.TextAppearance.AppCompat.Large" >
+    </style>
+
+    <style name="Text.Label.AddExercise">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">@color/dark_grey</item>
+    </style>
+
+    <style name="VerticalLayoutElement">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="VerticalLayoutElement.AddExercise">
+        <item name="android:background">@drawable/bg_add_exercise</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
 </resources>
