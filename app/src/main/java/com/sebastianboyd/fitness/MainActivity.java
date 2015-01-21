@@ -18,7 +18,9 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.request.DataReadRequest;
+import com.google.android.gms.fitness.result.DataReadResult;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +36,7 @@ public class MainActivity extends ActionBarActivity {
      */
     private static final String AUTH_PENDING = "auth_state_pending";
     private static final String TAG = "Fit Auth";
-
+    private static final String DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
     private boolean authInProgress = false;
     private GoogleApiClient mClient = null;
     Calendar cal = Calendar.getInstance();
@@ -44,11 +46,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        cal.setTime(now);
-        long endTime = cal.getTimeInMillis();
-        cal.add(Calendar.WEEK_OF_YEAR, -1);
-        long startTime = cal.getTimeInMillis();
 
         if (savedInstanceState != null) {
             authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
@@ -125,23 +122,37 @@ public class MainActivity extends ActionBarActivity {
                 )
                 .build();
     }
-    /**
-    // Setting a start and end date using a range of 1 week before this moment.
-    DataReadRequest readRequest = new DataReadRequest.Builder()
-            // The data request can specify multiple data types to return, effectively
-            // combining multiple data queries into one call.
-            // In this example, it's very unlikely that the request is for several hundred
-            // datapoints each consisting of a few steps and a timestamp.  The more likely
-            // scenario is wanting to see how many steps were walked per day, for 7 days.
-            .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                    // Analogous to a "Group By" in SQL, defines how data should be aggregated.
-                    // bucketByTime allows for a time span, whereas bucketBySession would allow
-                    // bucketing by "sessions", which would need to be defined in code.
-            .bucketByTime(1, TimeUnit.DAYS)
-            // Replace 0 and 1 with startTime and endTime
-            .setTimeRange(0, 1, TimeUnit.MILLISECONDS)
-            .build();
-    **/
+
+    protected void getData() {
+        // Setting a start and end date using a range of 1 week before this moment.
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        cal.setTime(now);
+        long endTime = cal.getTimeInMillis();
+        cal.add(Calendar.WEEK_OF_YEAR, -1);
+        long startTime = cal.getTimeInMillis();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        Log.i(TAG, "Range Start: " + dateFormat.format(startTime));
+        Log.i(TAG, "Range End: " + dateFormat.format(endTime));
+
+        DataReadRequest readRequest = new DataReadRequest.Builder()
+                // The data request can specify multiple data types to return, effectively
+                // combining multiple data queries into one call.
+                // In this example, it's very unlikely that the request is for several hundred
+                // datapoints each consisting of a few steps and a timestamp.  The more likely
+                // scenario is wanting to see how many steps were walked per day, for 7 days.
+                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                        // Analogous to a "Group By" in SQL, defines how data should be aggregated.
+                        // bucketByTime allows for a time span, whereas bucketBySession would allow
+                        // bucketing by "sessions", which would need to be defined in code.
+                .bucketByTime(1, TimeUnit.DAYS)
+                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
+                .build();
+        DataReadResult dataReadResult =
+                Fitness.HistoryApi.readData(mClient, readRequest).await(1, TimeUnit.MINUTES);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
