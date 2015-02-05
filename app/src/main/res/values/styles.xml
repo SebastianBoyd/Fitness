@@ -35,7 +35,7 @@
     </style>
 
     <style name="VerticalLayoutElement.AddExercise">
-        <item name="android:background">@drawable/bg_add_exercise</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:orientation">horizontal</item>
     </style>
 </resources>

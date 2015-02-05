@@ -4,5 +4,16 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="android:windowBackground">@color/window_background</item>
+        <item name="colorControlHighlight">@color/touch_accent</item>
+    </style>
+
+    <style name="Theme.Main.PushupsActivity">
+        <item name="colorPrimary">@color/pushups</item>
+        <item name="colorPrimaryDark">@color/pushups_dark</item>
+    </style>
+
+    <style name="Theme.Main.JumpsActivity">
+        <item name="colorPrimary">@color/jumps</item>
+        <item name="colorPrimaryDark">@color/jumps_dark</item>
     </style>
 </resources>

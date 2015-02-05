@@ -2,36 +2,42 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".MainActivity" >
+                tools:context=".MainActivity">
+
     <LinearLayout android:id="@+id/addPushupContainer"
                   style="@style/VerticalLayoutElement.AddExercise"
-                  android:onClick="startPushups" >
+                  android:onClick="startPushups">
+
         <ImageButton android:id="@+id/addPushupButton"
                      style="@style/Button.Round.Small.Pushups"
                      android:contentDescription="@string/add_pushups_button"
-                     android:onClick="startPushups" />
+                     android:onClick="startPushups"/>
+
         <TextView android:id="@+id/addPushupButtonLabel"
                   style="@style/Text.Label.AddExercise"
-                  android:text="@string/add_pushups_button" />
+                  android:text="@string/add_pushups_button"/>
     </LinearLayout>
 
     <LinearLayout android:id="@+id/addJumpsContainer"
                   style="@style/VerticalLayoutElement.AddExercise"
-                  android:layout_below="@id/addPushupContainer" >
+                  android:layout_below="@id/addPushupContainer"
+                  android:onClick="startJumps">
+
         <ImageButton android:id="@+id/addJumpsButton"
                      style="@style/Button.Round.Small.Jumps"
-                     android:contentDescription="@string/add_jumps_button" />
+                     android:contentDescription="@string/add_jumps_button"
+                     android:onClick="startJumps"/>
+
         <TextView android:id="@+id/addJumpsButtonLabel"
                   style="@style/Text.Label.AddExercise"
-                  android:text="@string/add_jumps_button" />
+                  android:text="@string/add_jumps_button"/>
     </LinearLayout>
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:id="@+id/life"
-            android:layout_below="@+id/addJumpsContainer"
-            android:layout_centerHorizontal="true"
-            android:textSize="50sp"/>
+    <TextView android:id="@+id/life"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/addJumpsContainer"
+              android:layout_centerHorizontal="true"
+              android:text="0"
+              android:textSize="50sp"/>
 </RelativeLayout>

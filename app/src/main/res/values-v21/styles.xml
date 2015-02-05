@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Button.Round.Small.Pushups">
-        <item name="android:background">@drawable/shape_oval_pushups</item>
-        <item name="android:elevation">@dimen/button_round_small_elevation</item>
+    <style name="Button.Round.Small">
+        <item name="android:layout_width">@dimen/button_round_small_diameter</item>
+        <item name="android:layout_height">@dimen/button_round_small_diameter</item>
         <item name="android:layout_margin">@dimen/button_round_small_margins</item>
+        <item name="android:elevation">@dimen/button_round_small_elevation</item>
     </style>
 </resources>

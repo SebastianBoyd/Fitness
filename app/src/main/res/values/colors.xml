@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primary">#FF009687</color>
-    <color name="primary_dark">#FF007667</color>
-    <color name="touch_accent">#AFFF</color>
+    <color name="primary_dark">#FF00756A</color>
+    <color name="touch_accent">#ACCC</color>
     <color name="window_background">#EEE</color>
 
     <color name="pushups">#FF2294F2</color>
+    <color name="pushups_dark">#FF1D7DCC</color>
     <color name="jumps">#FF693BB8</color>
+    <color name="jumps_dark">#FF532F91</color>
 
     <color name="red">#FFF54336</color>
     <color name="green">#FF4CB04F</color>
