@@ -19,14 +19,16 @@
         <activity android:name=".PushupCounter"
                   android:label="@string/title_activity_pushup_counter"
                   android:parentActivityName=".MainActivity"
-                  android:theme="@style/Theme.Main.PushupsActivity">
+                  android:theme="@style/Theme.Main.PushupsActivity"
+                  android:screenOrientation="portrait">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value="com.sebastianboyd.fitness.MainActivity"/>
         </activity>
         <activity android:name=".JumpingJack"
                   android:label="@string/title_activity_jumping_jack"
                   android:parentActivityName=".MainActivity"
-                  android:theme="@style/Theme.Main.JumpsActivity">
+                  android:theme="@style/Theme.Main.JumpsActivity"
+                  android:screenOrientation="portrait">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value="com.sebastianboyd.fitness.MainActivity"/>
         </activity>

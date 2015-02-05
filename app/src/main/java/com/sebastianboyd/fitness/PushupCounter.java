@@ -5,9 +5,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.hardware.Sensor;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,17 +13,20 @@ import android.widget.TextView;
 public class PushupCounter extends ActionBarActivity implements SensorEventListener{
     private SensorManager mSensorManager;
     private Sensor mSensor;
-    private int Pushups = 0;
+    private int pushups = 0;
     private float range;
     private TextView currentPushups;
     static final String STATE_PUSHUPS = "player_score";
+
+    private View readyPrompt;
+    private View decrementButton;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            Pushups = savedInstanceState.getInt(STATE_PUSHUPS);
+            pushups = savedInstanceState.getInt(STATE_PUSHUPS);
         }
         setContentView(R.layout.activity_pushup_counter);
         currentPushups = new TextView(this);
@@ -34,13 +35,15 @@ public class PushupCounter extends ActionBarActivity implements SensorEventListe
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         range = mSensor.getMaximumRange();
 
-
+        readyPrompt = findViewById(R.id.pushup_counter_ready_prompt);
+        decrementButton = findViewById(R.id.button_decrement_pushups);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        updatePushups();
     }
 
     @Override
@@ -51,7 +54,7 @@ public class PushupCounter extends ActionBarActivity implements SensorEventListe
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putInt(STATE_PUSHUPS, Pushups);
+        savedInstanceState.putInt(STATE_PUSHUPS, pushups);
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -59,23 +62,34 @@ public class PushupCounter extends ActionBarActivity implements SensorEventListe
     @Override
     public void onSensorChanged(SensorEvent event) {
         float in = event.values[0];
-        if (in < range) Pushups++;
+        if (in < range) pushups++;
         updatePushups();
-
     }
+
     public void updatePushups(){
-        if (Pushups < 0) Pushups = 0;
-        String out = String.valueOf(Pushups);
+        if (pushups < 0) pushups = 0;
+        String out = String.valueOf(pushups);
         currentPushups.setText(out);
+
+        // FUTURE: eventually, animate hide/show
+        // However, it can wait, since they will probably not be able to see
+        // the animation if they are using the sensor to add pushups.
+        if (pushups == 0) {
+            decrementButton.setVisibility(View.INVISIBLE);
+            readyPrompt.setVisibility(View.VISIBLE);
+        } else {
+            readyPrompt.setVisibility(View.INVISIBLE);
+            decrementButton.setVisibility(View.VISIBLE);
+        }
     }
 
     public void addPushup(View view) {
-        Pushups++;
+        pushups++;
         updatePushups();
     }
 
     public void removePushup(View view) {
-        Pushups--;
+        pushups--;
         updatePushups();
     }
 

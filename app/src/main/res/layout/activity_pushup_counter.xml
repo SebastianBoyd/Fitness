@@ -1,37 +1,47 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout android:id="@+id/pushupsActivity"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clickable="false"
+                android:paddingBottom="@dimen/activity_vertical_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                tools:context="com.sebastianboyd.fitness.PushupCounter"
-                android:id="@+id/pushupsActivity"
-                android:clickable="false" >
-    <TextView android:text="@string/pushups_count"
-              android:layout_width="128dp"
-              android:layout_height="wrap_content"
-              android:textSize="100sp"
-              android:id="@+id/pushupsText"
+                tools:context="com.sebastianboyd.fitness.PushupCounter">
+
+    <TextView android:id="@+id/pushupsText"
+              style="@style/CounterCircle"
+              android:layout_centerHorizontal="true"
               android:layout_centerVertical="true"
-              android:layout_centerHorizontal="true" />
+              android:background="@drawable/shape_oval_pushups"
+              android:text="@string/pushups_count"/>
 
-    <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="&lt;"
-            android:id="@+id/button"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/pushupsText"
-            android:layout_toStartOf="@+id/pushupsText"
-            android:onClick="removePushup" />
+    <TextView android:id="@+id/pushup_counter_ready_prompt"
+              style="@style/Text.Label.CountReady"
+              android:layout_above="@id/pushupsText"
+              android:text="@string/counter_readyPrompt"/>
 
-    <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="&gt;"
-            android:id="@+id/button2"
-            android:layout_alignTop="@+id/button"
-            android:layout_toRightOf="@+id/pushupsText"
-            android:layout_toEndOf="@+id/pushupsText"
-            android:onClick="addPushup" />
+    <RelativeLayout android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="horizontal">
+
+        <ImageButton android:id="@+id/button_decrement_pushups"
+                     style="@style/Button.Round.Small.LightGrey"
+                     android:layout_alignParentLeft="true"
+                     android:layout_alignParentStart="true"
+                     android:contentDescription="@string/decrement"
+                     android:onClick="removePushup"
+                     android:src="@drawable/ic_chevron_left"/>
+
+        <ImageButton android:id="@+id/button_increment_pushups"
+                     style="@style/Button.Round.Small.LightGrey"
+                     android:layout_alignParentEnd="true"
+                     android:layout_alignParentRight="true"
+                     android:contentDescription="@string/increment"
+                     android:onClick="addPushup"
+                     android:src="@drawable/ic_chevron_right"/>
+    </RelativeLayout>
+
 </RelativeLayout>

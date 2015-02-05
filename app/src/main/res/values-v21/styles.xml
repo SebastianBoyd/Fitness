@@ -6,4 +6,13 @@
         <item name="android:layout_margin">@dimen/button_round_small_margins</item>
         <item name="android:elevation">@dimen/button_round_small_elevation</item>
     </style>
+
+    <style name="CounterCircle">
+        <item name="android:layout_width">@dimen/counter_circle_diameter</item>
+        <item name="android:layout_height">@dimen/counter_circle_diameter</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/counter_circle_text_size</item>
+        <item name="android:elevation">@dimen/counter_circle_elevation</item>
+    </style>
 </resources>

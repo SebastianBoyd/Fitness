@@ -10,4 +10,9 @@
     <string name="pushups_count">0</string>
 
     <string name="title_activity_jumping_jack">JumpingJack</string>
+
+    <string name="increment">Increment</string>
+    <string name="decrement">Decrement</string>
+
+    <string name="counter_readyPrompt">Ready to go!</string>
 </resources>
