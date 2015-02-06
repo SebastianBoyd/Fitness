@@ -8,24 +8,22 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                tools:context="com.sebastianboyd.fitness.PushupCounter">
+                tools:context="com.sebastianboyd.fitness.AddPushupsActivity">
 
-    <TextView android:id="@+id/pushupsText"
-              style="@style/CounterCircle"
-              android:layout_centerHorizontal="true"
-              android:layout_centerVertical="true"
-              android:background="@drawable/shape_oval_pushups"
-              android:text="@string/pushups_count"/>
+    <Button android:id="@+id/pushups_counter_circle"
+            style="@style/Button.Round.CounterCircle"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:onClick="togglePause"
+            android:text="@string/pushups_count"/>
 
     <TextView android:id="@+id/pushup_counter_ready_prompt"
               style="@style/Text.Label.CountReady"
-              android:layout_above="@id/pushupsText"
+              android:layout_above="@id/pushups_counter_circle"
               android:text="@string/counter_readyPrompt"/>
 
-    <RelativeLayout android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:orientation="horizontal">
+    <RelativeLayout android:id="@+id/pushup_adjuster_layout"
+                    style="@style/BottomControlLayout">
 
         <ImageButton android:id="@+id/button_decrement_pushups"
                      style="@style/Button.Round.Small.LightGrey"

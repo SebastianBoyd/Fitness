@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_active="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/pushups_dark"/>
+        </shape>
+    </item>
+
+    <item android:drawable="@drawable/shape_oval_pushups"/>
+</selector>

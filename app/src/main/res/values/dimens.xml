@@ -7,10 +7,10 @@
     <dimen name="button_round_small_elevation">4dp</dimen>
     <dimen name="button_round_small_margins">24dp</dimen>
 
-    <dimen name="counter_circle_diameter">192dp</dimen>
-    <dimen name="counter_circle_text_size">100sp</dimen>
+    <dimen name="counter_circle_diameter">176dp</dimen>
+    <dimen name="counter_circle_text_size">80sp</dimen>
     <dimen name="counter_circle_elevation">6dp</dimen>
 
-    <dimen name="counter_readyPrompt_text_size">35sp</dimen>
+    <dimen name="counter_readyPrompt_text_size">32sp</dimen>
     <dimen name="counter_readyPrompt_margin">32dp</dimen>
 </resources>

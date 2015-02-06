@@ -1,12 +1,13 @@
 package com.sebastianboyd.fitness;
 
-import android.support.v7.app.ActionBarActivity;
+
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class JumpingJack extends ActionBarActivity {
+public class AddJumpsActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

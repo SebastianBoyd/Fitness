@@ -1,9 +1,10 @@
 package com.sebastianboyd.fitness;
 
+
 import android.content.Intent;
 import android.content.IntentSender;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,8 +25,8 @@ import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 
@@ -33,9 +34,14 @@ public class MainActivity extends ActionBarActivity {
 
     private static final int REQUEST_OAUTH = 1;
     /**
-     *  Track whether an authorization activity is stacking over the current activity, i.e. when
-     *  a known auth error is being resolved, such as showing the account chooser or presenting a
-     *  consent dialog. This avoids common duplications as might happen on screen rotations, etc.
+     * Track whether an authorization activity is stacking over the current
+     * activity, i.e. when
+     * a known auth error is being resolved, such as showing the account
+     * chooser
+     * or presenting a
+     * consent dialog. This avoids common duplications as might happen on
+     * screen
+     * rotations, etc.
      */
     private static final String AUTH_PENDING = "auth_state_pending";
     private static final String TAG = "Fit Auth";
@@ -56,12 +62,19 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     *  Build a {@link GoogleApiClient} that will authenticate the user and allow the application
-     *  to connect to Fitness APIs. The scopes included should match the scopes your app needs
-     *  (see documentation for details). Authentication will occasionally fail intentionally,
-     *  and in those cases, there will be a known resolution, which the OnConnectionFailedListener()
-     *  can address. Examples of this include the user never having signed in before, or having
-     *  multiple accounts on the device and needing to specify which account to use, etc.
+     * Build a {@link GoogleApiClient} that will authenticate the user and
+     * allow
+     * the application
+     * to connect to Fitness APIs. The scopes included should match the scopes
+     * your app needs
+     * (see documentation for details). Authentication will occasionally fail
+     * intentionally,
+     * and in those cases, there will be a known resolution, which the
+     * OnConnectionFailedListener()
+     * can address. Examples of this include the user never having signed in
+     * before, or having
+     * multiple accounts on the device and needing to specify which account to
+     * use, etc.
      */
     private void buildFitnessClient() {
         // Create the Google API Client
@@ -83,10 +96,14 @@ public class MainActivity extends ActionBarActivity {
                             public void onConnectionSuspended(int i) {
                                 // If your connection to the sensor gets lost at some point,
                                 // you'll be able to determine the reason and react to it here.
-                                if (i == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
-                                    Log.i(TAG, "Connection lost.  Cause: Network Lost.");
-                                } else if (i == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
-                                    Log.i(TAG, "Connection lost.  Reason: Service Disconnected");
+                                if (i ==
+                                    GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
+                                    Log.i(TAG,
+                                          "Connection lost.  Cause: Network Lost.");
+                                } else if (i ==
+                                           GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
+                                    Log.i(TAG,
+                                          "Connection lost.  Reason: Service Disconnected");
                                 }
                             }
                         }
@@ -96,11 +113,14 @@ public class MainActivity extends ActionBarActivity {
                         new GoogleApiClient.OnConnectionFailedListener() {
                             // Called whenever the API client fails to connect.
                             @Override
-                            public void onConnectionFailed(ConnectionResult result) {
-                                Log.i(TAG, "Connection failed. Cause: " + result.toString());
+                            public void onConnectionFailed(
+                                    ConnectionResult result) {
+                                Log.i(TAG, "Connection failed. Cause: " +
+                                           result.toString());
                                 if (!result.hasResolution()) {
                                     // Show the localized error dialog
-                                    GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(),
+                                    GooglePlayServicesUtil.getErrorDialog(
+                                            result.getErrorCode(),
                                             MainActivity.this, 0).show();
                                     return;
                                 }
@@ -109,19 +129,30 @@ public class MainActivity extends ActionBarActivity {
                                 // authorization dialog is displayed to the user.
                                 if (!authInProgress) {
                                     try {
-                                        Log.i(TAG, "Attempting to resolve failed connection");
+                                        Log.i(TAG,
+                                              "Attempting to resolve failed connection");
                                         authInProgress = true;
-                                        result.startResolutionForResult(MainActivity.this,
+                                        result.startResolutionForResult(
+                                                MainActivity.this,
                                                 REQUEST_OAUTH);
                                     } catch (IntentSender.SendIntentException e) {
                                         Log.e(TAG,
-                                                "Exception while starting resolution activity", e);
+                                              "Exception while starting resolution activity",
+                                              e);
                                     }
                                 }
                             }
                         }
                 )
                 .build();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mClient.isConnected()) {
+            mClient.disconnect();
+        }
     }
 
     protected DataReadResult getData() {
@@ -143,14 +174,16 @@ public class MainActivity extends ActionBarActivity {
                 // In this example, it's very unlikely that the request is for several hundred
                 // datapoints each consisting of a few steps and a timestamp.  The more likely
                 // scenario is wanting to see how many steps were walked per day, for 7 days.
-                .aggregate(DataType.TYPE_CALORIES_EXPENDED, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .aggregate(DataType.TYPE_CALORIES_EXPENDED,
+                           DataType.AGGREGATE_STEP_COUNT_DELTA)
                         // Analogous to a "Group By" in SQL, defines how data should be aggregated.
                         // bucketByTime allows for a time span, whereas bucketBySession would allow
                         // bucketing by "sessions", which would need to be defined in code.
                 .bucketByTime(1, TimeUnit.DAYS)
                 .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                 .build();
-        return Fitness.HistoryApi.readData(mClient, readRequest).await(1, TimeUnit.MINUTES);
+        return Fitness.HistoryApi.readData(mClient, readRequest)
+                                 .await(1, TimeUnit.MINUTES);
     }
 
     protected void addData() {
@@ -160,7 +193,7 @@ public class MainActivity extends ActionBarActivity {
     protected void calculateLife() {
         setContentView(R.layout.activity_pushup_counter);
         TextView life;
-        life = (TextView)findViewById(R.id.life);
+        life = (TextView) findViewById(R.id.life);
         life.setText("Hello");
 
     }
@@ -169,32 +202,20 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Connect to the Fitness API
-        Log.i(TAG, "Connecting...");
-        mClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mClient.isConnected()) {
-            mClient.disconnect();
-        }
-    }
-
     private void dumpDataSet(DataSet dataSet) {
-        Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
+        Log.i(TAG,
+              "Data returned for Data type: " +
+              dataSet.getDataType().getName());
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
         for (DataPoint dp : dataSet.getDataPoints()) {
             Log.i(TAG, "Data point:");
             Log.i(TAG, "\tType: " + dp.getDataType().getName());
-            Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
-            for(Field field : dp.getDataType().getFields()) {
+            Log.i(TAG, "\tStart: " + dateFormat
+                    .format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+            Log.i(TAG, "\tEnd: " +
+                       dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
+            for (Field field : dp.getDataType().getFields()) {
                 Log.i(TAG, "\tField: " + field.getName() +
                            " Value: " + dp.getValue(field));
             }
@@ -202,7 +223,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
         if (requestCode == REQUEST_OAUTH) {
             authInProgress = false;
             if (resultCode == RESULT_OK) {
@@ -218,6 +240,14 @@ public class MainActivity extends ActionBarActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(AUTH_PENDING, authInProgress);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Connect to the Fitness API
+        Log.i(TAG, "Connecting...");
+        mClient.connect();
     }
 
     @Override
@@ -242,13 +272,13 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void startPushups(View view){
-        Intent intent = new Intent(this, PushupCounter.class);
+    public void startPushups(View view) {
+        Intent intent = new Intent(this, AddPushupsActivity.class);
         startActivity(intent);
     }
 
-    public void startJumps(View view){
-        Intent intent = new Intent(this, JumpingJack.class);
+    public void startJumps(View view) {
+        Intent intent = new Intent(this, AddJumpsActivity.class);
         startActivity(intent);
     }
 }

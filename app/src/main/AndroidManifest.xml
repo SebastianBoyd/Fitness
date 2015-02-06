@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.sebastianboyd.fitness">
+<manifest package="com.sebastianboyd.fitness"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application android:allowBackup="true"
                  android:icon="@drawable/ic_launcher"
@@ -16,19 +16,19 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".PushupCounter"
+        <activity android:name=".AddPushupsActivity"
                   android:label="@string/title_activity_pushup_counter"
                   android:parentActivityName=".MainActivity"
-                  android:theme="@style/Theme.Main.PushupsActivity"
-                  android:screenOrientation="portrait">
+                  android:screenOrientation="portrait"
+                  android:theme="@style/Theme.Main.PushupsActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value="com.sebastianboyd.fitness.MainActivity"/>
         </activity>
-        <activity android:name=".JumpingJack"
+        <activity android:name=".AddJumpsActivity"
                   android:label="@string/title_activity_jumping_jack"
                   android:parentActivityName=".MainActivity"
-                  android:theme="@style/Theme.Main.JumpsActivity"
-                  android:screenOrientation="portrait">
+                  android:screenOrientation="portrait"
+                  android:theme="@style/Theme.Main.JumpsActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value="com.sebastianboyd.fitness.MainActivity"/>
         </activity>
