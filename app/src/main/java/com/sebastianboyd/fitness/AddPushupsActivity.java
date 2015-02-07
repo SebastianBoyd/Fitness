@@ -7,14 +7,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 
-public class AddPushupsActivity extends ActionBarActivity implements
-                                                          SensorEventListener {
+public class AddPushupsActivity extends BaseActivity implements
+                                                     SensorEventListener {
     static final String STATE_PUSHUPS = "pushup_count";
     static final String STATE_PAUSED = "pushup_count_paused";
 

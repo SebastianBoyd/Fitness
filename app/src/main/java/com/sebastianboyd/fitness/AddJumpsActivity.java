@@ -2,12 +2,11 @@ package com.sebastianboyd.fitness;
 
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class AddJumpsActivity extends ActionBarActivity {
+public class AddJumpsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

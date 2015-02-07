@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Jump</string>
+    <string name="title_app">Jump</string>
     <string name="action_settings">Settings</string>
 
     <string name="add_pushups_button">Pushups</string>
