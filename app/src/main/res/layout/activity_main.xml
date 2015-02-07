@@ -26,7 +26,8 @@
         <ImageButton android:id="@+id/addJumpsButton"
                      style="@style/Button.Round.Small.Jumps"
                      android:contentDescription="@string/add_jumps_button"
-                     android:onClick="startJumps"/>
+                     android:onClick="startJumps"
+                     android:src="@drawable/ic_jumps"/>
 
         <TextView android:id="@+id/addJumpsButtonLabel"
                   style="@style/Text.Label.AddExercise"

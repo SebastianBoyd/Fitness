@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#FF009687</color>
-    <color name="primary_dark">#FF00756A</color>
+    <color name="primary">#009687</color>
+    <color name="primary_dark">#00796B</color>
     <color name="touch_accent">#ACCC</color>
     <color name="window_background">#EEE</color>
 
-    <color name="pushups">#FF2294F2</color>
-    <color name="pushups_dark">#FF1D7DCC</color>
-    <color name="jumps">#FF693BB8</color>
-    <color name="jumps_dark">#FF532F91</color>
+    <color name="pushups">#2294F2</color>
+    <color name="pushups_dark">#1D7DCC</color>
+    <color name="jumps">#693BB8</color>
+    <color name="jumps_dark">#532F91</color>
 
-    <color name="red">#FFF54336</color>
-    <color name="green">#FF4CB04F</color>
-    <color name="light_grey">#FFABABAB</color>
-    <color name="dark_grey">#FF525252</color>
+    <color name="red">#F54336</color>
+    <color name="green">#4CB04F</color>
+    <color name="light_grey">#ABABAB</color>
+    <color name="dark_grey">#525252</color>
 </resources>
