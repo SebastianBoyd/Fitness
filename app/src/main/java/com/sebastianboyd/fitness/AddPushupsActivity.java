@@ -7,6 +7,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,8 +26,10 @@ public class AddPushupsActivity extends BaseActivity implements
     private Sensor mSensor;
     private Button counterCircle;
     private View readyPrompt;
-    private View decrementButton;
-    private ViewGroup adjusterLayout;
+    //    private View decrementButton;
+    private View resetButton;
+    private ViewGroup pausedControlLayout;
+    private ViewGroup resumedControlLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,8 +45,12 @@ public class AddPushupsActivity extends BaseActivity implements
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         range = mSensor.getMaximumRange();
         readyPrompt = findViewById(R.id.pushup_counter_ready_prompt);
-        decrementButton = findViewById(R.id.button_decrement_pushups);
-        adjusterLayout = (ViewGroup) findViewById(R.id.pushup_adjuster_layout);
+//        decrementButton = findViewById(R.id.button_decrement_pushups);
+        resetButton = findViewById(R.id.button_reset_pushups);
+        pausedControlLayout = (ViewGroup) findViewById(
+                R.id.pushup_paused_control_layout);
+        resumedControlLayout = (ViewGroup) findViewById(
+                R.id.pushup_resumed_control_layout);
     }
 
     @Override
@@ -81,11 +88,16 @@ public class AddPushupsActivity extends BaseActivity implements
         // Especially hide, since they will most likely be using the sensor to
         // add pushups, so they won't see the animation
         if (pushups == 0) {
-            decrementButton.setVisibility(View.INVISIBLE);
+//            decrementButton.setVisibility(View.INVISIBLE);
             readyPrompt.setVisibility(View.VISIBLE);
+            resetButton.setVisibility(View.INVISIBLE);
+
+            paused = false;
+            updatePauseState();
         } else {
             readyPrompt.setVisibility(View.INVISIBLE);
-            decrementButton.setVisibility(View.VISIBLE);
+            resetButton.setVisibility(View.VISIBLE);
+//            decrementButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -98,11 +110,13 @@ public class AddPushupsActivity extends BaseActivity implements
         // FUTURE: animate all of the transitions
         Drawable newBG;
         if (paused) {
-            adjusterLayout.setVisibility(View.GONE);
+            pausedControlLayout.setVisibility(View.VISIBLE);
+            resumedControlLayout.setVisibility(View.GONE);
             newBG = getResources().getDrawable(
                     R.drawable.bg_button_round_darkgrey);
         } else {
-            adjusterLayout.setVisibility(View.VISIBLE);
+            resumedControlLayout.setVisibility(View.VISIBLE);
+            pausedControlLayout.setVisibility(View.GONE);
             if (pushups == 0) {
                 newBG = getResources()
                         .getDrawable(R.drawable.shape_oval_pushups);
@@ -139,5 +153,22 @@ public class AddPushupsActivity extends BaseActivity implements
         // Cannot be paused if pushups == 0
         paused = pushups > 0 && !paused;
         updatePauseState();
+    }
+
+    public void resetCount(View view) {
+        // FUTURE: animate this action
+        pushups = 0;
+        updateExerciseCount();
+    }
+
+    /**
+     * Commit the pushup count and associated metadata to the server.
+     *
+     * @param view
+     *         The view calling this method.
+     */
+    public void sendData(View view) {
+        // TODO: Implement API call to Google Fit (this is you, Sebastian)
+        NavUtils.navigateUpFromSameTask(this);
     }
 }

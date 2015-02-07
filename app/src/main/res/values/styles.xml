@@ -22,6 +22,15 @@
         <item name="android:background">@drawable/bg_button_round_lightgrey</item>
     </style>
 
+    <style name="Button.Round.Small.DarkGrey">
+        <item name="android:background">@drawable/bg_button_round_darkgrey
+        </item>
+    </style>
+
+    <style name="Button.Round.Small.Green">
+        <item name="android:background">@drawable/bg_button_round_green</item>
+    </style>
+
     <style name="Button.Round.CounterCircle">
         <item name="android:layout_width">@dimen/counter_circle_diameter</item>
         <item name="android:layout_height">@dimen/counter_circle_diameter</item>

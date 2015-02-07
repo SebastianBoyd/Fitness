@@ -22,7 +22,7 @@
               android:layout_above="@id/pushups_counter_circle"
               android:text="@string/counter_readyPrompt"/>
 
-    <RelativeLayout android:id="@+id/pushup_adjuster_layout"
+    <RelativeLayout android:id="@+id/pushup_paused_control_layout"
                     style="@style/BottomControlLayout">
 
         <ImageButton android:id="@+id/button_decrement_pushups"
@@ -33,6 +33,12 @@
                      android:onClick="removePushup"
                      android:src="@drawable/ic_chevron_left"/>
 
+        <ImageButton android:id="@+id/button_commit_pushups"
+                     style="@style/Button.Round.Small.Green"
+                     android:layout_centerHorizontal="true"
+                     android:onClick="sendData"
+                     android:src="@drawable/ic_done"/>
+
         <ImageButton android:id="@+id/button_increment_pushups"
                      style="@style/Button.Round.Small.LightGrey"
                      android:layout_alignParentEnd="true"
@@ -40,6 +46,16 @@
                      android:contentDescription="@string/increment"
                      android:onClick="addPushup"
                      android:src="@drawable/ic_chevron_right"/>
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/pushup_resumed_control_layout"
+                    style="@style/BottomControlLayout">
+
+        <ImageButton android:id="@+id/button_reset_pushups"
+                     style="@style/Button.Round.Small.DarkGrey"
+                     android:layout_centerHorizontal="true"
+                     android:onClick="resetCount"
+                     android:src="@drawable/ic_reset"/>
     </RelativeLayout>
 
 </RelativeLayout>
