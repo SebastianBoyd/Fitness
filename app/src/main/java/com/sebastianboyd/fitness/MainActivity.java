@@ -1,11 +1,14 @@
 package com.sebastianboyd.fitness;
 
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +54,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        configureTransitions();
 
         if (savedInstanceState != null) {
             authInProgress = savedInstanceState.getBoolean(STATE_AUTH_PENDING);
@@ -59,6 +63,12 @@ public class MainActivity extends BaseActivity {
         buildFitnessClient();
         getData();
         calculateLife();
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            findViewById(R.id.add_pushup_button).setTransitionName(
+                    getResources()
+                            .getString(R.string.transition_pushup_circle));
+        }
     }
 
     /**
@@ -259,6 +269,11 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_AUTH_PENDING, authInProgress);
@@ -284,11 +299,9 @@ public class MainActivity extends BaseActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -296,7 +309,27 @@ public class MainActivity extends BaseActivity {
 
     public void startPushups(View view) {
         Intent intent = new Intent(this, AddPushupsActivity.class);
-        startActivity(intent);
+        final View pushupButton = findViewById(R.id.add_pushup_button);
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            //noinspection unchecked
+            Bundle options =
+                    ActivityOptions.makeSceneTransitionAnimation(
+                            this,
+                            Pair.create(pushupButton,
+                                        pushupButton.getTransitionName())
+                            // FUTURE: Make this work at some point
+//                            Pair.create(findViewById(
+//                                                android.R.id.navigationBarBackground),
+//                                        Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME),
+//                            Pair.create(findViewById(
+//                                                android.R.id.statusBarBackground),
+//                                        Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME)
+                    ).toBundle();
+            startActivity(intent, options);
+        } else {
+            startActivity(intent);
+        }
     }
 
     public void startJumps(View view) {

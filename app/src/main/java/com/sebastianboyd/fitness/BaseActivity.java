@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.transition.Fade;
+import android.transition.Transition;
+import android.view.Window;
 
 
 /**
@@ -18,6 +21,9 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        }
         super.onCreate(savedInstanceState);
         styleRecentAppBar();
     }
@@ -34,6 +40,15 @@ public abstract class BaseActivity extends ActionBarActivity {
 
             setTaskDescription(new ActivityManager.TaskDescription(title, icon,
                                                                    color));
+        }
+    }
+
+    protected void configureTransitions() {
+        if (Build.VERSION.SDK_INT >= 21) {
+            Transition fade = new Fade();
+            fade.excludeTarget(android.R.id.navigationBarBackground, true);
+            getWindow().setExitTransition(fade);
+            getWindow().setEnterTransition(fade);
         }
     }
 }

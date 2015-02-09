@@ -11,7 +11,7 @@ public class AddJumpsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_jumping_jack);
+        setContentView(R.layout.activity_add_jumps);
     }
 
 

@@ -14,8 +14,7 @@
             style="@style/Button.Round.CounterCircle"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:onClick="togglePause"
-            android:text="@string/pushups_count"/>
+            android:onClick="togglePause"/>
 
     <TextView android:id="@+id/pushup_counter_ready_prompt"
               style="@style/Text.Label.CountReady"
@@ -36,6 +35,7 @@
         <ImageButton android:id="@+id/button_commit_pushups"
                      style="@style/Button.Round.Small.Green"
                      android:layout_centerHorizontal="true"
+                     android:contentDescription="@string/done"
                      android:onClick="sendData"
                      android:src="@drawable/ic_done"/>
 
@@ -55,7 +55,8 @@
                      style="@style/Button.Round.Small.DarkGrey"
                      android:layout_centerHorizontal="true"
                      android:onClick="resetCount"
-                     android:src="@drawable/ic_reset"/>
+                     android:src="@drawable/ic_reset"
+                     android:visibility="invisible"/>
     </RelativeLayout>
 
 </RelativeLayout>

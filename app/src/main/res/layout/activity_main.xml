@@ -1,17 +1,17 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout android:id="@+id/layout_main_activity_root"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".MainActivity">
 
-    <LinearLayout android:id="@+id/addPushupContainer"
+    <LinearLayout android:id="@+id/add_pushup_container"
                   style="@style/VerticalLayoutElement.AddExercise"
                   android:onClick="startPushups">
 
-        <ImageButton android:id="@+id/addPushupButton"
-                     style="@style/Button.Round.Small.Pushups"
-                     android:contentDescription="@string/add_pushups_button"
-                     android:onClick="startPushups"/>
+        <ImageView android:id="@+id/add_pushup_button"
+                   style="@style/CircleIcon.Pushups"
+                   android:contentDescription="@string/add_pushups_button"/>
 
         <TextView android:id="@+id/addPushupButtonLabel"
                   style="@style/Text.Label.AddExercise"
@@ -20,14 +20,13 @@
 
     <LinearLayout android:id="@+id/addJumpsContainer"
                   style="@style/VerticalLayoutElement.AddExercise"
-                  android:layout_below="@id/addPushupContainer"
+                  android:layout_below="@id/add_pushup_container"
                   android:onClick="startJumps">
 
-        <ImageButton android:id="@+id/addJumpsButton"
-                     style="@style/Button.Round.Small.Jumps"
-                     android:contentDescription="@string/add_jumps_button"
-                     android:onClick="startJumps"
-                     android:src="@drawable/ic_jumps"/>
+        <ImageView android:id="@+id/addJumpsButton"
+                   style="@style/CircleIcon.Jumps"
+                   android:contentDescription="@string/add_jumps_button"
+                   android:onClick="startJumps"/>
 
         <TextView android:id="@+id/addJumpsButtonLabel"
                   style="@style/Text.Label.AddExercise"

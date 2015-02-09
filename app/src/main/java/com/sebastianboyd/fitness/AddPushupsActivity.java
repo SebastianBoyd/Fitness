@@ -1,13 +1,19 @@
 package com.sebastianboyd.fitness;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.transition.Fade;
+import android.transition.Transition;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -24,12 +30,10 @@ public class AddPushupsActivity extends BaseActivity implements
 
     private SensorManager mSensorManager;
     private Sensor mSensor;
+
+    private View readyPrompt, resetButton;
     private Button counterCircle;
-    private View readyPrompt;
-    //    private View decrementButton;
-    private View resetButton;
-    private ViewGroup pausedControlLayout;
-    private ViewGroup resumedControlLayout;
+    private ViewGroup pausedControlLayout, resumedControlLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,42 +42,80 @@ public class AddPushupsActivity extends BaseActivity implements
             pushups = savedInstanceState.getInt(STATE_PUSHUPS);
             paused = savedInstanceState.getBoolean(STATE_PAUSED);
         }
-        setContentView(R.layout.activity_pushup_counter);
+        setContentView(R.layout.activity_add_pushups);
+        configureTransitions();
 
         counterCircle = (Button) findViewById(R.id.pushups_counter_circle);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         range = mSensor.getMaximumRange();
         readyPrompt = findViewById(R.id.pushup_counter_ready_prompt);
-//        decrementButton = findViewById(R.id.button_decrement_pushups);
         resetButton = findViewById(R.id.button_reset_pushups);
         pausedControlLayout = (ViewGroup) findViewById(
                 R.id.pushup_paused_control_layout);
         resumedControlLayout = (ViewGroup) findViewById(
                 R.id.pushup_resumed_control_layout);
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            counterCircle.setTransitionName(
+                    getResources()
+                            .getString(R.string.transition_pushup_circle));
+        }
+
+        // FUTURE: make this approach work
+        // Makes action bar and status bar fade in activity transition
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            // Postpone the transition until the window's decor view has
+//            // finished its layout.
+//            postponeEnterTransition();
+//            final ViewTreeObserver observer =
+//                    getWindow().getDecorView().getViewTreeObserver();
+//            observer.addOnPreDrawListener(
+//                    new ViewTreeObserver.OnPreDrawListener() {
+//                        @Override
+//                        public boolean onPreDraw() {
+//                            observer.removeOnPreDrawListener(this);
+//                            startPostponedEnterTransition();
+//                            return true;
+//                        }
+//                    });
+//        }
     }
 
+    /**
+     * Hide pushup count until animation is complete.
+     */
     @Override
-    protected void onPause() {
-        super.onPause();
-        mSensorManager.unregisterListener(this);
-    }
+    protected void configureTransitions() {
+        super.configureTransitions();
+        if (Build.VERSION.SDK_INT >= 21) {
+            Transition fade = new Fade();
+            fade.excludeTarget(android.R.id.navigationBarBackground, true);
+            fade.addListener(new Transition.TransitionListener() {
+                @Override
+                public void onTransitionStart(Transition transition) {
+                }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSensorManager.registerListener(this, mSensor,
-                                        SensorManager.SENSOR_DELAY_NORMAL);
-        updateExerciseCount();
-        updatePauseState();
-    }
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                    updateExerciseCount();
+                }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putInt(STATE_PUSHUPS, pushups);
-        savedInstanceState.putBoolean(STATE_PAUSED, paused);
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
+                @Override
+                public void onTransitionCancel(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
+                }
+            });
+
+            getWindow().setEnterTransition(fade);
+        }
     }
 
     /**
@@ -88,7 +130,6 @@ public class AddPushupsActivity extends BaseActivity implements
         // Especially hide, since they will most likely be using the sensor to
         // add pushups, so they won't see the animation
         if (pushups == 0) {
-//            decrementButton.setVisibility(View.INVISIBLE);
             readyPrompt.setVisibility(View.VISIBLE);
             resetButton.setVisibility(View.INVISIBLE);
 
@@ -97,7 +138,6 @@ public class AddPushupsActivity extends BaseActivity implements
         } else {
             readyPrompt.setVisibility(View.INVISIBLE);
             resetButton.setVisibility(View.VISIBLE);
-//            decrementButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -129,10 +169,109 @@ public class AddPushupsActivity extends BaseActivity implements
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, mSensor,
+                                        SensorManager.SENSOR_DELAY_NORMAL);
+        updatePauseState();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt(STATE_PUSHUPS, pushups);
+        savedInstanceState.putBoolean(STATE_PAUSED, paused);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                promptDiscard();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void promptDiscard() {
+        DialogInterface.OnClickListener positiveListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        discard();
+                        finish();
+                    }
+                };
+        promptDiscard(positiveListener);
+    }
+
+    /**
+     * Dump data as necessary.
+     */
+    public void discard() {
+        // May be unnecessary, the activity may clear all of our data for us.
+        // I don't know, so this is up to you, Sebastian.
+    }
+
+    public void promptDiscard(
+            DialogInterface.OnClickListener positiveListener) {
+        if (!hasUnsavedData()) {
+            return;
+        }
+
+        DialogInterface.OnClickListener negativeListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_discard_title)
+                .setMessage(R.string.dialog_discard_message)
+                .setPositiveButton(R.string.dialog_discard_accept,
+                                   positiveListener)
+                .setNegativeButton(R.string.dialog_discard_cancel,
+                                   negativeListener)
+                .setCancelable(true);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public boolean hasUnsavedData() {
+        // TODO: check if there is any data to be saved (this is you, Sebastian)
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DialogInterface.OnClickListener onDiscard =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        discard();
+                        // Just to make the animation pretty.
+                        counterCircle.setText("");
+                        AddPushupsActivity.super.onBackPressed();
+                    }
+                };
+        promptDiscard(onDiscard);
+    }
+
+    @Override
     public void onSensorChanged(SensorEvent event) {
         float in = event.values[0];
-        if (in < range && !paused) pushups++;
-        updateExerciseCount();
+        if (in < range && !paused) {
+            pushups++;
+            updateExerciseCount();
+        }
     }
 
     @Override
@@ -157,6 +296,7 @@ public class AddPushupsActivity extends BaseActivity implements
 
     public void resetCount(View view) {
         // FUTURE: animate this action
+        // Maybe a circular reveal.
         pushups = 0;
         updateExerciseCount();
     }
