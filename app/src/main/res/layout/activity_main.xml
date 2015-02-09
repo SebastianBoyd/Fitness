@@ -38,6 +38,6 @@
               android:layout_height="wrap_content"
               android:layout_below="@+id/addJumpsContainer"
               android:layout_centerHorizontal="true"
-              android:text="@string/pushups_count"
-              android:textSize="50sp"/>
+              android:textSize="50sp"
+              android:visibility="invisible"/>
 </RelativeLayout>
