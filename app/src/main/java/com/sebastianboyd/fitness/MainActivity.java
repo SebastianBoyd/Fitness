@@ -181,8 +181,8 @@ public class MainActivity extends BaseActivity {
                 // In this example, it's very unlikely that the request is for several hundred
                 // datapoints each consisting of a few steps and a timestamp.  The more likely
                 // scenario is wanting to see how many steps were walked per day, for 7 days.
-                .aggregate(DataType.TYPE_STEP_COUNT_DELTA,
-                           DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .aggregate(DataType.TYPE_ACTIVITY_SEGMENT,
+                           DataType.AGGREGATE_ACTIVITY_SUMMARY)
                         // Analogous to a "Group By" in SQL, defines how data should be aggregated.
                         // bucketByTime allows for a time span, whereas bucketBySession would allow
                         // bucketing by "sessions", which would need to be defined in code.
