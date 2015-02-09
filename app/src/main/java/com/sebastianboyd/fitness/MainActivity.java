@@ -7,6 +7,7 @@ import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
@@ -35,16 +36,20 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends ActionBarActivity {
 
     private static final int REQUEST_OAUTH = 1;
     /**
      * Track whether an authorization activity is stacking over the current
-     * activity, i.e. when a known auth error is being resolved, such as
-     * showing the account chooser or presenting a consent dialog. This avoids
-     * common duplications as might happen on screen rotations, etc.
+     * activity, i.e. when
+     * a known auth error is being resolved, such as showing the account
+     * chooser
+     * or presenting a
+     * consent dialog. This avoids common duplications as might happen on
+     * screen
+     * rotations, etc.
      */
-    private static final String STATE_AUTH_PENDING = "auth_state_pending";
+    private static final String AUTH_PENDING = "auth_state_pending";
     private static final String TAG = "Fit Auth";
     private static final String DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
     private boolean authInProgress = false;
@@ -57,7 +62,7 @@ public class MainActivity extends BaseActivity {
         configureTransitions();
 
         if (savedInstanceState != null) {
-            authInProgress = savedInstanceState.getBoolean(STATE_AUTH_PENDING);
+            authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
         }
 
         buildFitnessClient();
@@ -158,6 +163,26 @@ public class MainActivity extends BaseActivity {
                 .build();
     }
 
+    private class InsertAndVerifyDataTask extends AsyncTask<Void, Void, Void> {
+        protected Void doInBackground(Void... params) {
+            DataReadRequest readRequest = getData();
+            DataReadResult dataReadResult =
+                    Fitness.HistoryApi.readData(mClient,
+                                                readRequest).await(1, TimeUnit.MINUTES);
+            printData(dataReadResult);
+            return null;
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mClient.isConnected()) {
+            mClient.disconnect();
+        }
+    }
+
     protected DataReadRequest getData() {
         // Setting a start and end date using a range of 1 week before this moment.
         Calendar cal = Calendar.getInstance();
@@ -171,20 +196,24 @@ public class MainActivity extends BaseActivity {
         Log.i(TAG, "Range Start: " + dateFormat.format(startTime));
         Log.i(TAG, "Range End: " + dateFormat.format(endTime));
 
-        return new DataReadRequest.Builder()
+        DataReadRequest readRequest = new DataReadRequest.Builder()
                 // The data request can specify multiple data types to return, effectively
                 // combining multiple data queries into one call.
                 // In this example, it's very unlikely that the request is for several hundred
                 // datapoints each consisting of a few steps and a timestamp.  The more likely
                 // scenario is wanting to see how many steps were walked per day, for 7 days.
-                .aggregate(DataType.TYPE_STEP_COUNT_DELTA,
-                           DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
                         // Analogous to a "Group By" in SQL, defines how data should be aggregated.
                         // bucketByTime allows for a time span, whereas bucketBySession would allow
                         // bucketing by "sessions", which would need to be defined in code.
                 .bucketByTime(1, TimeUnit.DAYS)
                 .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                 .build();
+        return readRequest;
+    }
+
+    protected void addData() {
+
     }
 
     protected void calculateLife() {
@@ -192,18 +221,6 @@ public class MainActivity extends BaseActivity {
         TextView life;
         life = (TextView) findViewById(R.id.life);
         life.setText("Hello");
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mClient.isConnected()) {
-            mClient.disconnect();
-        }
-    }
-
-    protected void addData() {
 
     }
 
@@ -276,7 +293,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(STATE_AUTH_PENDING, authInProgress);
+        outState.putBoolean(AUTH_PENDING, authInProgress);
     }
 
     @Override
@@ -335,19 +352,5 @@ public class MainActivity extends BaseActivity {
     public void startJumps(View view) {
         Intent intent = new Intent(this, AddJumpsActivity.class);
         startActivity(intent);
-    }
-
-
-    private class InsertAndVerifyDataTask extends AsyncTask<Void, Void, Void> {
-        protected Void doInBackground(Void... params) {
-            DataReadRequest readRequest = getData();
-            DataReadResult dataReadResult =
-                    Fitness.HistoryApi.readData(mClient,
-                                                readRequest)
-                                      .await(1, TimeUnit.MINUTES);
-            printData(dataReadResult);
-            return null;
-        }
-
     }
 }
