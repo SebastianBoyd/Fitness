@@ -23,6 +23,7 @@ import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.Bucket;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.request.DataReadRequest;
@@ -189,6 +190,32 @@ public class MainActivity extends BaseActivity {
                 .bucketByTime(1, TimeUnit.DAYS)
                 .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                 .build();
+    }
+
+    private DataSet insertFitnessData(int startTime, int endTime,
+                                      int activity) {
+        Log.i(TAG, "Creating a new data insert request");
+
+
+        // Create a data source
+        DataSource dataSource = new DataSource.Builder()
+                .setAppPackageName(this)
+                .setDataType(DataType.TYPE_ACTIVITY_SEGMENT)
+                .setName(TAG + " - Activity")
+                .setType(DataSource.TYPE_RAW)
+                .build();
+
+        // Create a data set
+        DataSet dataSet = DataSet.create(dataSource);
+        // For each data point, specify a start time, end time, and the data value -- in this case,
+        // the number of new steps.
+        DataPoint dataPoint = dataSet.createDataPoint()
+                                     .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
+        dataPoint.getValue(Field.FIELD_ACTIVITY).setInt(activity);
+        dataSet.add(dataPoint);
+        // [END build_insert_data_request]
+
+        return dataSet;
     }
 
     protected void calculateLife() {
