@@ -45,14 +45,15 @@
         <item name="android:layout_margin">@dimen/circle_icon_margins</item>
     </style>
 
+    <!-- TODO: optimize dpi for icons -->
     <style name="CircleIcon.Pushups">
         <item name="android:background">@drawable/shape_oval_pushups</item>
-        <!--<item name="android:src"></item>-->
+        <item name="android:src">@drawable/ic_pushups</item>
     </style>
 
     <style name="CircleIcon.Jumps">
         <item name="android:background">@drawable/shape_oval_jumps</item>
-        <!--<item name="android:src">@drawable/ic_jumps</item>-->
+        <item name="android:src">@drawable/ic_jumps</item>
     </style>
 
     <style name="Text.Label"
