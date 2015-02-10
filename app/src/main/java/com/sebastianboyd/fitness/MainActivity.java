@@ -32,6 +32,7 @@ import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -246,11 +247,16 @@ public class MainActivity extends BaseActivity {
                     for (DataPoint dp : dataSet.getDataPoints()) {
                         Value activityValue = dp.getValue(Field
                                                                   .FIELD_ACTIVITY);
+                        Value durationValue = dp.getValue(Field.FIELD_DURATION);
                         int activityInt = activityValue.asInt();
+                        int durationInt = durationValue.asInt();
                         if (activityArray[activityInt] == null){
                             activityArray[activityInt][0] = 0;
 
                         }
+                        activityArray[activityInt][0] =
+                                activityArray[activityInt][0] + durationInt;
+
 
                     }
                 }
@@ -400,7 +406,7 @@ public class MainActivity extends BaseActivity {
                     Fitness.HistoryApi.readData(mClient,
                                                 readRequest)
                                       .await(1, TimeUnit.MINUTES);
-            printData(dataReadResult);
+            calculateMoney(dataReadResult);
             return null;
         }
 
