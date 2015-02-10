@@ -7,6 +7,7 @@ import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
@@ -26,6 +27,7 @@ import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
+import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
 
@@ -234,12 +236,34 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    protected void addData() {
+    protected int calculateMoney(DataReadResult dataReadResult) {
+        int[][] activityArray = new int[107][2];
+        if (dataReadResult.getBuckets().size() > 0) {
+            for (Bucket bucket : dataReadResult.getBuckets()) {
+                List<DataSet> dataSets = bucket.getDataSets();
+                for (DataSet dataSet : dataSets) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+                    for (DataPoint dp : dataSet.getDataPoints()) {
+                        Value activityValue = dp.getValue(Field
+                                                                  .FIELD_ACTIVITY);
+                        int activityInt = activityValue.asInt();
+                        if (activityArray[activityInt] == null){
+                            activityArray[activityInt][0] = 0;
 
-    }
+                        }
 
-    protected void calculateMoney() {
+                    }
+                }
+            }
+        }
 
+        else if (dataReadResult.getDataSets().size() > 0) {
+            for (DataSet dataSet : dataReadResult.getDataSets()) {
+                dumpDataSet(dataSet);
+            }
+        }
+
+        return 0;
     }
 
     private void printData(DataReadResult dataReadResult) {

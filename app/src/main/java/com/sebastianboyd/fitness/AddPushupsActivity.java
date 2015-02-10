@@ -247,7 +247,12 @@ public class AddPushupsActivity extends BaseActivity implements
 
     public boolean hasUnsavedData() {
         // TODO: check if there is any data to be saved (this is you, Sebastian)
-        return true;
+        if (pushups > 0) {
+            return true;
+        }
+        else {
+            return true;
+        }
     }
 
     @Override
