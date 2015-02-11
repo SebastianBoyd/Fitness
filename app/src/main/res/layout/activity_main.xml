@@ -39,5 +39,6 @@
               android:layout_below="@+id/addJumpsContainer"
               android:layout_centerHorizontal="true"
               android:textSize="50sp"
-              android:visibility="invisible"/>
+              android:visibility="visible"
+              android:text="0"/>
 </RelativeLayout>

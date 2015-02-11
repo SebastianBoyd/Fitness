@@ -4,6 +4,7 @@ package com.sebastianboyd.fitness;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -57,6 +58,7 @@ public class MainActivity extends BaseActivity {
     private static final String DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
     private boolean authInProgress = false;
     private GoogleApiClient mClient = null;
+    public int lifeGained = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,7 @@ public class MainActivity extends BaseActivity {
                     getResources()
                             .getString(R.string.transition_pushup_circle));
         }
+
     }
 
     /**
@@ -222,9 +225,9 @@ public class MainActivity extends BaseActivity {
 
     protected void displayLife() {
         setContentView(R.layout.activity_main);
-        TextView life;
-        life = (TextView) findViewById(R.id.life);
-        life.setText("Hello");
+        TextView lol;
+        lol = (TextView)findViewById(R.id.life);
+        lol.setText(String.valueOf(lifeGained));
 
     }
 
@@ -248,7 +251,7 @@ public class MainActivity extends BaseActivity {
                         Value durationValue = dp.getValue(Field.FIELD_DURATION);
                         Integer activityInt = activityValue.asInt();
                         Integer durationInt = durationValue.asInt();
-                        if (activityArray[activityInt] == null){
+                        if (activityArray[activityInt][0] == null){
                             activityArray[activityInt][0] = 0;
 
                         }
@@ -284,16 +287,20 @@ public class MainActivity extends BaseActivity {
     }
 
     private int calculateLife(Integer[][] activityArray){
-        int totalMinutes = 0;
+        int totalMilliseconds = 0;
         for (Integer[] activity : activityArray) {
             int multiplier = 1;
             if (activity[1] != null){
                 multiplier = activity[1];
             }
-            totalMinutes = totalMinutes + (activity[0] * multiplier);
+            if (activity[0] != null) {
+                totalMilliseconds = totalMilliseconds + (activity[0] * multiplier);
+            }
+
 
         }
-        int lifeGained = totalMinutes * 7;
+        int totalSeconds = (totalMilliseconds / 1000);
+        lifeGained = totalSeconds * 7;
         return lifeGained;
     }
 
@@ -431,7 +438,13 @@ public class MainActivity extends BaseActivity {
                     Fitness.HistoryApi.readData(mClient,
                                                 readRequest)
                                       .await(1, TimeUnit.MINUTES);
-            calculateLife(parseData(dataReadResult));
+            lifeGained = calculateLife(parseData(dataReadResult));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    displayLife();
+                }
+            });
             return null;
         }
 
