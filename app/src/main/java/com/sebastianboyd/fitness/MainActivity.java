@@ -70,7 +70,6 @@ public class MainActivity extends BaseActivity {
 
         buildFitnessClient();
         getData();
-        calculateLife();
 
         if (Build.VERSION.SDK_INT >= 21) {
             findViewById(R.id.add_pushup_button).setTransitionName(
@@ -221,7 +220,7 @@ public class MainActivity extends BaseActivity {
         return dataSet;
     }
 
-    protected void calculateLife() {
+    protected void displayLife() {
         setContentView(R.layout.activity_main);
         TextView life;
         life = (TextView) findViewById(R.id.life);
@@ -237,26 +236,24 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    protected int calculateMoney(DataReadResult dataReadResult) {
-        int[][] activityArray = new int[107][2];
+    protected Integer[][] parseData(DataReadResult dataReadResult) {
+        Integer[][] activityArray = new Integer[107][2];
         if (dataReadResult.getBuckets().size() > 0) {
             for (Bucket bucket : dataReadResult.getBuckets()) {
                 List<DataSet> dataSets = bucket.getDataSets();
                 for (DataSet dataSet : dataSets) {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
                     for (DataPoint dp : dataSet.getDataPoints()) {
                         Value activityValue = dp.getValue(Field
                                                                   .FIELD_ACTIVITY);
                         Value durationValue = dp.getValue(Field.FIELD_DURATION);
-                        int activityInt = activityValue.asInt();
-                        int durationInt = durationValue.asInt();
+                        Integer activityInt = activityValue.asInt();
+                        Integer durationInt = durationValue.asInt();
                         if (activityArray[activityInt] == null){
                             activityArray[activityInt][0] = 0;
 
                         }
                         activityArray[activityInt][0] =
                                 activityArray[activityInt][0] + durationInt;
-
 
                     }
                 }
@@ -265,11 +262,39 @@ public class MainActivity extends BaseActivity {
 
         else if (dataReadResult.getDataSets().size() > 0) {
             for (DataSet dataSet : dataReadResult.getDataSets()) {
-                dumpDataSet(dataSet);
+                for (DataPoint dp : dataSet.getDataPoints()) {
+                    Value activityValue = dp.getValue(Field
+                                                              .FIELD_ACTIVITY);
+                    Value durationValue = dp.getValue(Field.FIELD_DURATION);
+                    Integer activityInt = activityValue.asInt();
+                    Integer durationInt = durationValue.asInt();
+                    if (activityArray[activityInt] == null) {
+                        activityArray[activityInt][0] = 0;
+
+                    }
+                    activityArray[activityInt][0] =
+                            activityArray[activityInt][0] + durationInt;
+
+                }
             }
+
         }
 
-        return 0;
+        return activityArray;
+    }
+
+    private int calculateLife(Integer[][] activityArray){
+        int totalMinutes = 0;
+        for (Integer[] activity : activityArray) {
+            int multiplier = 1;
+            if (activity[1] != null){
+                multiplier = activity[1];
+            }
+            totalMinutes = totalMinutes + (activity[0] * multiplier);
+
+        }
+        int lifeGained = totalMinutes * 7;
+        return lifeGained;
     }
 
     private void printData(DataReadResult dataReadResult) {
@@ -406,7 +431,7 @@ public class MainActivity extends BaseActivity {
                     Fitness.HistoryApi.readData(mClient,
                                                 readRequest)
                                       .await(1, TimeUnit.MINUTES);
-            calculateMoney(dataReadResult);
+            calculateLife(parseData(dataReadResult));
             return null;
         }
 
