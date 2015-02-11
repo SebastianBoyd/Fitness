@@ -11,7 +11,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.transition.Fade;
 import android.transition.Transition;
 import android.view.MenuItem;
@@ -22,11 +21,10 @@ import android.widget.Button;
 
 public class AddPushupsActivity extends BaseActivity implements
                                                      SensorEventListener {
-    static final String STATE_PUSHUPS = "pushup_count";
-    static final String STATE_PAUSED = "pushup_count_paused";
     public final static String EXTRA_MESSAGE = "com.sebastianboyd" +
                                                ".fitness.MESSAGE";
-
+    static final String STATE_PUSHUPS = "pushup_count";
+    static final String STATE_PAUSED = "pushup_count_paused";
     private int pushups = 0;
     private int startTime = 0;
     private int endTime = 0;
@@ -120,6 +118,8 @@ public class AddPushupsActivity extends BaseActivity implements
             });
 
             getWindow().setEnterTransition(fade);
+        } else {
+            updateExerciseCount();
         }
     }
 
