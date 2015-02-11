@@ -32,6 +32,8 @@ import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -59,6 +61,8 @@ public class MainActivity extends BaseActivity {
     private boolean authInProgress = false;
     private GoogleApiClient mClient = null;
     public int lifeGained = 0;
+    private int salary = 60000;
+    private double moneyEarned = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,11 +227,30 @@ public class MainActivity extends BaseActivity {
         return dataSet;
     }
 
-    protected void displayLife() {
+    protected void displayText() {
         setContentView(R.layout.activity_main);
-        TextView lol;
-        lol = (TextView)findViewById(R.id.life);
-        lol.setText(String.valueOf(lifeGained));
+        TextView life;
+        int day = (int)TimeUnit.SECONDS.toDays(lifeGained);
+        long hours = TimeUnit.SECONDS.toHours(lifeGained) - (day * 24);
+        long minute = TimeUnit.SECONDS.toMinutes(lifeGained) - (TimeUnit.SECONDS
+                                                               .toHours(lifeGained)* 60);
+        long second = TimeUnit.SECONDS.toSeconds(lifeGained) - (TimeUnit.SECONDS
+                                                               .toMinutes(lifeGained)
+                                                                *60);
+        life = (TextView)findViewById(R.id.life);
+        String str = String.valueOf(day) + "," + String.valueOf(hours) +
+                     "," + String.valueOf(minute) + "," + String.valueOf(second);
+        life.setText(str);
+        TextView money;
+        money = (TextView)findViewById(R.id.money);
+        String strMoney = String.valueOf(moneyEarned);
+        money.setText("$" + strMoney);
+
+    }
+
+    private void displayMoney(){
+        setContentView(R.layout.activity_main);
+
 
     }
 
@@ -286,7 +309,7 @@ public class MainActivity extends BaseActivity {
         return activityArray;
     }
 
-    private int calculateLife(Integer[][] activityArray){
+    private void calculateLife(Integer[][] activityArray){
         int totalMilliseconds = 0;
         for (Integer[] activity : activityArray) {
             int multiplier = 1;
@@ -301,8 +324,23 @@ public class MainActivity extends BaseActivity {
         }
         int totalSeconds = (totalMilliseconds / 1000);
         lifeGained = totalSeconds * 7;
-        return lifeGained;
     }
+
+    private void calculateMoney(){
+        double workWeek = 0.28;
+        double moneyEarnedLong = lifeGained * salary * workWeek / 365 / 24 / 60;
+        moneyEarned = round(moneyEarnedLong, 2);
+        Log.v(TAG, String.valueOf(moneyEarnedLong));
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
 
     private void printData(DataReadResult dataReadResult) {
         // [START parse_read_data_result]
@@ -438,11 +476,12 @@ public class MainActivity extends BaseActivity {
                     Fitness.HistoryApi.readData(mClient,
                                                 readRequest)
                                       .await(1, TimeUnit.MINUTES);
-            lifeGained = calculateLife(parseData(dataReadResult));
+            calculateLife(parseData(dataReadResult));
+            calculateMoney();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    displayLife();
+                    displayText();
                 }
             });
             return null;
