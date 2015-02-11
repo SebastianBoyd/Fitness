@@ -3,6 +3,7 @@ package com.sebastianboyd.fitness;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -23,8 +24,12 @@ public class AddPushupsActivity extends BaseActivity implements
                                                      SensorEventListener {
     static final String STATE_PUSHUPS = "pushup_count";
     static final String STATE_PAUSED = "pushup_count_paused";
+    public final static String EXTRA_MESSAGE = "com.sebastianboyd" +
+                                               ".fitness.MESSAGE";
 
     private int pushups = 0;
+    private int startTime = 0;
+    private int endTime = 0;
     private boolean paused = false;
     private float range;
 
@@ -246,7 +251,6 @@ public class AddPushupsActivity extends BaseActivity implements
     }
 
     public boolean hasUnsavedData() {
-        // TODO: check if there is any data to be saved (this is you, Sebastian)
         if (pushups > 0) {
             return true;
         }
@@ -275,6 +279,12 @@ public class AddPushupsActivity extends BaseActivity implements
         float in = event.values[0];
         if (in < range && !paused) {
             pushups++;
+            if (pushups == 1){
+
+            }
+            else if (pushups > 1) {
+
+            }
             updateExerciseCount();
         }
     }
@@ -313,7 +323,12 @@ public class AddPushupsActivity extends BaseActivity implements
      *         The view calling this method.
      */
     public void sendData(View view) {
-        // TODO: Implement API call to Google Fit (this is you, Sebastian)
-        NavUtils.navigateUpFromSameTask(this);
+        Intent intent = new Intent(this, MainActivity.class);
+        int[] intentData = new int[2];
+        intentData[0] = pushups;
+        intentData[1] = startTime;
+        intentData[2] = endTime;
+        intent.putExtra(EXTRA_MESSAGE, pushups);
+        startActivity(intent);
     }
 }

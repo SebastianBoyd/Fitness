@@ -74,7 +74,7 @@ public class MainActivity extends BaseActivity {
         }
 
         buildFitnessClient();
-        getData();
+        getData(7);
 
         if (Build.VERSION.SDK_INT >= 21) {
             findViewById(R.id.add_pushup_button).setTransitionName(
@@ -171,13 +171,13 @@ public class MainActivity extends BaseActivity {
                 .build();
     }
 
-    protected DataReadRequest getData() {
+    protected DataReadRequest getData(int days) {
         // Setting a start and end date using a range of 1 week before this moment.
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
         long endTime = cal.getTimeInMillis();
-        cal.add(Calendar.DAY_OF_YEAR, -7);
+        cal.add(Calendar.DAY_OF_YEAR, - days);
         long startTime = cal.getTimeInMillis();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -276,9 +276,7 @@ public class MainActivity extends BaseActivity {
                         }
                         activityArray[activityInt][0] =
                                 activityArray[activityInt][0] + durationInt;
-                        Log.v(TAG, String.valueOf(activityInt) + "-" + String
-                                .valueOf
-                                (activityArray[activityInt][0]));
+
 
                     }
                 }
@@ -469,7 +467,9 @@ public class MainActivity extends BaseActivity {
 
     private class InsertAndVerifyDataTask extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... params) {
-            DataReadRequest readRequest = getData();
+            //DataSet dataSet = insertFitnessData(1, 2, 4);
+
+            DataReadRequest readRequest = getData(7);
             DataReadResult dataReadResult =
                     Fitness.HistoryApi.readData(mClient,
                                                 readRequest)
