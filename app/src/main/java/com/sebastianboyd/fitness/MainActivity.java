@@ -176,9 +176,12 @@ public class MainActivity extends BaseActivity {
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
+        long startTime = 1;
         long endTime = cal.getTimeInMillis();
-        cal.add(Calendar.DAY_OF_YEAR, - days);
-        long startTime = cal.getTimeInMillis();
+        if (days > 0){
+            cal.add(Calendar.DAY_OF_YEAR, - days);
+            startTime = cal.getTimeInMillis();
+        }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         Log.i(TAG, "Range Start: " + dateFormat.format(startTime));
