@@ -35,7 +35,6 @@ import com.google.android.gms.fitness.result.DataReadResult;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -60,7 +59,7 @@ public class MainActivity extends BaseActivity {
     private static final String DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
     private boolean authInProgress = false;
     private GoogleApiClient mClient = null;
-    public int lifeGained = 0;
+    public long lifeGained = 0;
     private int salary = 60000;
     private double moneyEarned = 0;
 
@@ -178,7 +177,7 @@ public class MainActivity extends BaseActivity {
         Date now = new Date();
         cal.setTime(now);
         long endTime = cal.getTimeInMillis();
-        cal.add(Calendar.WEEK_OF_YEAR, -1);
+        cal.add(Calendar.DAY_OF_YEAR, -7);
         long startTime = cal.getTimeInMillis();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -248,11 +247,6 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private void displayMoney(){
-        setContentView(R.layout.activity_main);
-
-
-    }
 
     @Override
     protected void onStop() {
@@ -264,6 +258,8 @@ public class MainActivity extends BaseActivity {
 
     protected Integer[][] parseData(DataReadResult dataReadResult) {
         Integer[][] activityArray = new Integer[107][2];
+        activityArray[3][1] = 0;
+        activityArray[0][1] = 0;
         if (dataReadResult.getBuckets().size() > 0) {
             for (Bucket bucket : dataReadResult.getBuckets()) {
                 List<DataSet> dataSets = bucket.getDataSets();
@@ -280,6 +276,9 @@ public class MainActivity extends BaseActivity {
                         }
                         activityArray[activityInt][0] =
                                 activityArray[activityInt][0] + durationInt;
+                        Log.v(TAG, String.valueOf(activityInt) + "-" + String
+                                .valueOf
+                                (activityArray[activityInt][0]));
 
                     }
                 }
@@ -330,7 +329,6 @@ public class MainActivity extends BaseActivity {
         double workWeek = 0.28;
         double moneyEarnedLong = lifeGained * salary * workWeek / 365 / 24 / 60;
         moneyEarned = round(moneyEarnedLong, 2);
-        Log.v(TAG, String.valueOf(moneyEarnedLong));
     }
 
     public static double round(double value, int places) {
@@ -341,7 +339,7 @@ public class MainActivity extends BaseActivity {
         return bd.doubleValue();
     }
 
-
+    //For testing
     private void printData(DataReadResult dataReadResult) {
         // [START parse_read_data_result]
         // If the DataReadRequest object specified aggregated data, dataReadResult will be returned
