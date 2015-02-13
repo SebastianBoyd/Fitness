@@ -9,19 +9,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.transition.Transition;
-import android.util.Log;
 import android.view.MenuItem;
-import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import com.google.android.gms.fitness.FitnessActivities;
 
 
 public class AddPushupsActivity extends BaseActivity implements
@@ -216,15 +211,14 @@ public class AddPushupsActivity extends BaseActivity implements
     }
 
     public void promptDiscard() {
-        DialogInterface.OnClickListener positiveListener =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        discard();
-                        finish();
-                    }
-                };
-        promptDiscard(positiveListener);
+        Callback positiveCallback = new Callback() {
+            @Override
+            public void fire() {
+                discard();
+                finish();
+            }
+        };
+        promptDiscard(positiveCallback);
     }
 
     /**
@@ -238,9 +232,9 @@ public class AddPushupsActivity extends BaseActivity implements
         // I don't know, so this is up to you, Sebastian.
     }
 
-    public void promptDiscard(
-            DialogInterface.OnClickListener positiveListener) {
+    public void promptDiscard(final Callback positiveCallback) {
         if (!hasUnsavedData()) {
+            positiveCallback.fire();
             return;
         }
 
@@ -255,7 +249,14 @@ public class AddPushupsActivity extends BaseActivity implements
                 .setTitle(R.string.dialog_discard_title)
                 .setMessage(R.string.dialog_discard_message)
                 .setPositiveButton(R.string.dialog_discard_accept,
-                                   positiveListener)
+                                   new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(
+                                               DialogInterface dialog,
+                                               int which) {
+                                           positiveCallback.fire();
+                                       }
+                                   })
                 .setNegativeButton(R.string.dialog_discard_cancel,
                                    negativeListener)
                 .setCancelable(true);
@@ -270,16 +271,15 @@ public class AddPushupsActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        DialogInterface.OnClickListener onDiscard =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        discard();
-                        // Just to make the animation pretty.
-                        counterCircle.setText("");
-                        AddPushupsActivity.super.onBackPressed();
-                    }
-                };
+        Callback onDiscard = new Callback() {
+            @Override
+            public void fire() {
+                discard();
+                // Just to make the animation pretty.
+                counterCircle.setText("");
+                AddPushupsActivity.super.onBackPressed();
+            }
+        };
         promptDiscard(onDiscard);
     }
 
@@ -340,5 +340,9 @@ public class AddPushupsActivity extends BaseActivity implements
             intent.putExtra(EXTRA_MESSAGE, intentData);
         }
         startActivity(intent);
+    }
+
+    public static abstract class Callback {
+        public abstract void fire();
     }
 }
