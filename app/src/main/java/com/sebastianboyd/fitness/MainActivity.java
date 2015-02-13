@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity {
      * rotations, etc.
      */
     private static final String AUTH_PENDING = "auth_state_pending";
-    private static final String TAG = "Fit Auth";
+    private static final String TAG = "MainActivity";
     private static final String DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
     public long lifeGained = 0;
     private boolean authInProgress = false;
@@ -65,7 +65,6 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        configureTransitions();
 
         if (savedInstanceState != null) {
             authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
@@ -80,6 +79,7 @@ public class MainActivity extends BaseActivity {
                             .getString(R.string.transition_pushup_circle));
         }
 
+        configureTransitions();
     }
 
     /**
@@ -445,7 +445,8 @@ public class MainActivity extends BaseActivity {
                     ActivityOptions.makeSceneTransitionAnimation(
                             this,
                             Pair.create(pushupButton,
-                                        pushupButton.getTransitionName())
+                                        getResources().getString(
+                                                R.string.transition_pushup_circle))
                             // FUTURE: Make this work at some point
 //                            Pair.create(findViewById(
 //                                                android.R.id.navigationBarBackground),
