@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+//TODO add preferences
 
 public class MainActivity extends BaseActivity {
 
@@ -339,6 +340,8 @@ public class MainActivity extends BaseActivity {
     }
 
     //For testing
+    // TODO delete on release
+    /*
     private void printData(DataReadResult dataReadResult) {
         // [START parse_read_data_result]
         // If the DataReadRequest object specified aggregated data, dataReadResult will be returned
@@ -362,6 +365,7 @@ public class MainActivity extends BaseActivity {
         // [END parse_read_data_result]
     }
 
+
     private void dumpDataSet(DataSet dataSet) {
         Log.i(TAG,
               "Data returned for Data type: " +
@@ -381,6 +385,7 @@ public class MainActivity extends BaseActivity {
             }
         }
     }
+    */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
