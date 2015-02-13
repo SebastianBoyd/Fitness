@@ -90,6 +90,7 @@ public class AddPushupsActivity extends BaseActivity implements
      */
     @Override
     protected void configureTransitions() {
+        // TODO: this is hacky, Zander will fix
         super.configureTransitions();
         if (Build.VERSION.SDK_INT >= 21) {
             Transition fade = new Fade();
@@ -118,9 +119,10 @@ public class AddPushupsActivity extends BaseActivity implements
             });
 
             getWindow().setEnterTransition(fade);
-        } else {
-            updateExerciseCount();
         }
+//        else {
+//            updateExerciseCount();
+//        }
     }
 
     /**
@@ -185,6 +187,10 @@ public class AddPushupsActivity extends BaseActivity implements
         mSensorManager.registerListener(this, mSensor,
                                         SensorManager.SENSOR_DELAY_NORMAL);
         updatePauseState();
+        // TODO: this is an extension of the hacky configureTransition
+        if (Build.VERSION.SDK_INT < 21) {
+            updateExerciseCount();
+        }
     }
 
     @Override
@@ -251,12 +257,7 @@ public class AddPushupsActivity extends BaseActivity implements
     }
 
     public boolean hasUnsavedData() {
-        if (pushups > 0) {
-            return true;
-        }
-        else {
-            return true;
-        }
+        return pushups > 0;
     }
 
     @Override
@@ -278,13 +279,8 @@ public class AddPushupsActivity extends BaseActivity implements
     public void onSensorChanged(SensorEvent event) {
         float in = event.values[0];
         if (in < range && !paused) {
+            // TODO: measure and update time
             pushups++;
-            if (pushups == 1){
-
-            }
-            else if (pushups > 1) {
-
-            }
             updateExerciseCount();
         }
     }
@@ -320,7 +316,7 @@ public class AddPushupsActivity extends BaseActivity implements
      * Commit the pushup count and associated metadata to the server.
      *
      * @param view
-     *         The view calling this method.
+     *         A reference to the okay button calling this method.
      */
     public void sendData(View view) {
         Intent intent = new Intent(this, MainActivity.class);

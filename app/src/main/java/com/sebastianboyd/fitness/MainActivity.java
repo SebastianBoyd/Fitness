@@ -4,11 +4,9 @@ package com.sebastianboyd.fitness;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
@@ -57,9 +55,9 @@ public class MainActivity extends BaseActivity {
     private static final String AUTH_PENDING = "auth_state_pending";
     private static final String TAG = "Fit Auth";
     private static final String DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
+    public long lifeGained = 0;
     private boolean authInProgress = false;
     private GoogleApiClient mClient = null;
-    public long lifeGained = 0;
     private int salary = 60000;
     private double moneyEarned = 0;
 
