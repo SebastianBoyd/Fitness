@@ -70,7 +70,6 @@ public class MainActivity extends BaseActivity {
         Intent intent = getIntent();
         inputData = intent.getLongArrayExtra(AddPushupsActivity.EXTRA_MESSAGE);
         Log.v(TAG, String.valueOf(inputData));
-        configureTransitions();
 
         if (savedInstanceState != null) {
             authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
@@ -85,6 +84,7 @@ public class MainActivity extends BaseActivity {
                             .getString(R.string.transition_pushup_circle));
         }
 
+        configureTransitions();
     }
 
     /**
@@ -448,14 +448,15 @@ public class MainActivity extends BaseActivity {
     public void startPushups(View view) {
         Intent intent = new Intent(this, AddPushupsActivity.class);
         final View pushupButton = findViewById(R.id.add_pushup_button);
-        /*
+
         if (Build.VERSION.SDK_INT >= 21) {
             //noinspection unchecked
             Bundle options =
                     ActivityOptions.makeSceneTransitionAnimation(
                             this,
                             Pair.create(pushupButton,
-                                        pushupButton.getTransitionName())
+                                        getResources().getString(
+                                                R.string.transition_pushup_circle))
                             // FUTURE: Make this work at some point
 //                            Pair.create(findViewById(
 //                                                android.R.id.navigationBarBackground),
@@ -468,8 +469,6 @@ public class MainActivity extends BaseActivity {
         } else {
             startActivity(intent);
         }
-        */
-        startActivity(intent);
     }
 
     public void startJumps(View view) {
