@@ -9,14 +9,19 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.MenuItem;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.google.android.gms.fitness.FitnessActivities;
 
 
 public class AddPushupsActivity extends BaseActivity implements
@@ -25,9 +30,9 @@ public class AddPushupsActivity extends BaseActivity implements
                                                ".fitness.MESSAGE";
     static final String STATE_PUSHUPS = "pushup_count";
     static final String STATE_PAUSED = "pushup_count_paused";
-    private int pushups = 0;
-    private int startTime = 0;
-    private int endTime = 0;
+    private long pushups = 0;
+    private long startTime = 0;
+    private long endTime = 0;
     private boolean paused = false;
     private float range;
 
@@ -42,7 +47,7 @@ public class AddPushupsActivity extends BaseActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            pushups = savedInstanceState.getInt(STATE_PUSHUPS);
+            pushups = savedInstanceState.getLong(STATE_PUSHUPS);
             paused = savedInstanceState.getBoolean(STATE_PAUSED);
         }
         setContentView(R.layout.activity_add_pushups);
@@ -195,7 +200,7 @@ public class AddPushupsActivity extends BaseActivity implements
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putInt(STATE_PUSHUPS, pushups);
+        savedInstanceState.putLong(STATE_PUSHUPS, pushups);
         savedInstanceState.putBoolean(STATE_PAUSED, paused);
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -282,8 +287,11 @@ public class AddPushupsActivity extends BaseActivity implements
     public void onSensorChanged(SensorEvent event) {
         float in = event.values[0];
         if (in < range && !paused) {
-            // TODO: measure and update time
             pushups++;
+            if (pushups == 1){
+                startTime = java.lang.System.currentTimeMillis() + 3;
+            }
+            endTime = java.lang.System.currentTimeMillis();
             updateExerciseCount();
         }
     }
@@ -323,11 +331,14 @@ public class AddPushupsActivity extends BaseActivity implements
      */
     public void sendData(View view) {
         Intent intent = new Intent(this, MainActivity.class);
-        int[] intentData = new int[2];
-        intentData[0] = pushups;
-        intentData[1] = startTime;
-        intentData[2] = endTime;
-        intent.putExtra(EXTRA_MESSAGE, pushups);
+        if (pushups > 0) {
+            long[] intentData = new long[3];
+            intentData[0] = 80; // TODO make static final (this is strength
+            // training)
+            intentData[1] = startTime;
+            intentData[2] = endTime;
+            intent.putExtra(EXTRA_MESSAGE, intentData);
+        }
         startActivity(intent);
     }
 }

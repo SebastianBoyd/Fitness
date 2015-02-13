@@ -61,11 +61,15 @@ public class MainActivity extends BaseActivity {
     private GoogleApiClient mClient = null;
     private int salary = 60000;
     private double moneyEarned = 0;
+    private long[] inputData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent = getIntent();
+        inputData = intent.getLongArrayExtra(AddPushupsActivity.EXTRA_MESSAGE);
+        Log.v(TAG, String.valueOf(inputData));
         configureTransitions();
 
         if (savedInstanceState != null) {
@@ -202,8 +206,8 @@ public class MainActivity extends BaseActivity {
                 .build();
     }
 
-    private DataSet insertFitnessData(int startTime, int endTime,
-                                      int activity) {
+    private DataSet insertFitnessData(long activity, long startTime,
+                                      long endTime) {
         Log.i(TAG, "Creating a new data insert request");
 
 
@@ -221,7 +225,7 @@ public class MainActivity extends BaseActivity {
         // the number of new steps.
         DataPoint dataPoint = dataSet.createDataPoint()
                                      .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
-        dataPoint.getValue(Field.FIELD_ACTIVITY).setInt(activity);
+        dataPoint.getValue(Field.FIELD_ACTIVITY).setInt((int) activity);
         dataSet.add(dataPoint);
         // [END build_insert_data_request]
 
@@ -408,6 +412,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        // FUTURE save counters
         super.onSaveInstanceState(outState);
         outState.putBoolean(AUTH_PENDING, authInProgress);
     }
@@ -443,7 +448,7 @@ public class MainActivity extends BaseActivity {
     public void startPushups(View view) {
         Intent intent = new Intent(this, AddPushupsActivity.class);
         final View pushupButton = findViewById(R.id.add_pushup_button);
-
+        /*
         if (Build.VERSION.SDK_INT >= 21) {
             //noinspection unchecked
             Bundle options =
@@ -463,6 +468,8 @@ public class MainActivity extends BaseActivity {
         } else {
             startActivity(intent);
         }
+        */
+        startActivity(intent);
     }
 
     public void startJumps(View view) {
@@ -473,7 +480,24 @@ public class MainActivity extends BaseActivity {
 
     private class InsertAndVerifyDataTask extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... params) {
-            //DataSet dataSet = insertFitnessData(1, 2, 4);
+            if (inputData != null) {
+                DataSet dataSet = insertFitnessData(inputData[0], inputData[1],
+                                                    inputData[2]);
+                Log.i(TAG, "Inserting the dataset in the History API");
+                com.google.android.gms.common.api.Status insertStatus =
+                        Fitness.HistoryApi.insertData(mClient, dataSet)
+                                          .await(1, TimeUnit.MINUTES);
+
+                // Before querying the data, check to see if the insertion succeeded.
+                if (!insertStatus.isSuccess()) {
+                    Log.i(TAG, "There was a problem inserting the dataset.");
+                    return null;
+                }
+
+                Log.i(TAG, "Data insert was successful!");
+                inputData = null;
+            }
+
 
             DataReadRequest readRequest = getData(7);
             DataReadResult dataReadResult =
