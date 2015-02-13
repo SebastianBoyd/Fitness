@@ -46,7 +46,6 @@ public class AddPushupsActivity extends BaseActivity implements
             paused = savedInstanceState.getBoolean(STATE_PAUSED);
         }
         setContentView(R.layout.activity_add_pushups);
-        configureTransitions();
 
         counterCircle = (Button) findViewById(R.id.pushups_counter_circle);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -64,6 +63,8 @@ public class AddPushupsActivity extends BaseActivity implements
                     getResources()
                             .getString(R.string.transition_pushup_circle));
         }
+
+        configureTransitions();
 
         // FUTURE: make this approach work
         // Makes action bar and status bar fade in activity transition
@@ -119,10 +120,9 @@ public class AddPushupsActivity extends BaseActivity implements
             });
 
             getWindow().setEnterTransition(fade);
+        } else {
+            updateExerciseCount();
         }
-//        else {
-//            updateExerciseCount();
-//        }
     }
 
     /**
@@ -188,9 +188,9 @@ public class AddPushupsActivity extends BaseActivity implements
                                         SensorManager.SENSOR_DELAY_NORMAL);
         updatePauseState();
         // TODO: this is an extension of the hacky configureTransition
-        if (Build.VERSION.SDK_INT < 21) {
-            updateExerciseCount();
-        }
+//        if (Build.VERSION.SDK_INT < 21) {
+//            updateExerciseCount();
+//        }
     }
 
     @Override
@@ -226,6 +226,9 @@ public class AddPushupsActivity extends BaseActivity implements
      * Dump data as necessary.
      */
     public void discard() {
+        // TODO: (on release) review this
+        // Should it be removed, or should we keep it just in case we ever
+        // need it?
         // May be unnecessary, the activity may clear all of our data for us.
         // I don't know, so this is up to you, Sebastian.
     }
