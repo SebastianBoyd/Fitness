@@ -17,8 +17,11 @@ import android.view.View;
 public class AddJumpsActivity extends BaseActivity implements
                                                    SensorEventListener{
 
+    static final String STATE_JUMPS = "pushup_count";
+    static final String STATE_PAUSED = "pushup_count_paused";
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
+    private boolean paused = false;
     private long lastUpdate = 0;
     private float last_x, last_y, last_z;
     private static final int SHAKE_THRESHOLD = 600;
@@ -32,6 +35,10 @@ public class AddJumpsActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            jumps = savedInstanceState.getLong(STATE_JUMPS);
+            paused = savedInstanceState.getBoolean(STATE_PAUSED);
+        }
         setContentView(R.layout.activity_add_jumps);
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
@@ -80,7 +87,11 @@ public class AddJumpsActivity extends BaseActivity implements
 
                 if (speed > SHAKE_THRESHOLD) {
                     jumps = jumps + 0.5;
+                    if (jumps == 1){
+                        startTime = java.lang.System.currentTimeMillis();
+                    }
                     Log.v("Sensor", String.valueOf(jumps));
+                    endTime = java.lang.System.currentTimeMillis();
                 }
 
                 last_x = x;
@@ -97,6 +108,10 @@ public class AddJumpsActivity extends BaseActivity implements
         jumps--;
     }
 
+    public boolean hasUnsavedData(){
+        return activity > 0;
+    }
+
     protected void onPause() {
         super.onPause();
         senSensorManager.unregisterListener(this);
@@ -105,6 +120,13 @@ public class AddJumpsActivity extends BaseActivity implements
     protected void onResume() {
         super.onResume();
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putDouble(STATE_JUMPS, jumps);
+        savedInstanceState.putBoolean(STATE_PAUSED, paused);
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     public void sendData(View view) {

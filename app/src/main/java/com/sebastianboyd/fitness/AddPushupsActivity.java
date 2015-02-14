@@ -291,7 +291,7 @@ public class AddPushupsActivity extends BaseActivity implements
         if (in < range && !paused) {
             pushups++;
             if (pushups == 1){
-                startTime = java.lang.System.currentTimeMillis() + 3;
+                startTime = java.lang.System.currentTimeMillis();
             }
             endTime = java.lang.System.currentTimeMillis();
             updateExerciseCount();
