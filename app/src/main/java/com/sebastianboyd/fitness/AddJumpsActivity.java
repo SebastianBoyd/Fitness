@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class AddJumpsActivity extends BaseActivity implements
@@ -81,6 +82,13 @@ public class AddJumpsActivity extends BaseActivity implements
                 last_z = z;
             }
         }
+    }
+
+    private void addJump(View view){
+        jumps++;
+    }
+    private void removeJump(View view){
+        jumps--;
     }
 
     protected void onPause() {

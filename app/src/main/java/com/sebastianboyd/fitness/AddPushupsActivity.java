@@ -30,6 +30,8 @@ public class AddPushupsActivity extends BaseActivity implements
     private long endTime = 0;
     private boolean paused = false;
     private float range;
+    static final int activity = 80; // TODO make static final (this is strength
+    // training)
 
     private SensorManager mSensorManager;
     private Sensor mSensor;
@@ -333,8 +335,7 @@ public class AddPushupsActivity extends BaseActivity implements
         Intent intent = new Intent(this, MainActivity.class);
         if (pushups > 0) {
             long[] intentData = new long[3];
-            intentData[0] = 80; // TODO make static final (this is strength
-            // training)
+            intentData[0] = activity;
             intentData[1] = startTime;
             intentData[2] = endTime;
             intent.putExtra(EXTRA_MESSAGE, intentData);
