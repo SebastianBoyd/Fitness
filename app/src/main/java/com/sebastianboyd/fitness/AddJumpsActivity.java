@@ -2,6 +2,7 @@ package com.sebastianboyd.fitness;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -22,6 +23,11 @@ public class AddJumpsActivity extends BaseActivity implements
     private float last_x, last_y, last_z;
     private static final int SHAKE_THRESHOLD = 600;
     private double jumps = 0;
+    private static final long activity = 9;
+    private long startTime = 0;
+    private long endTime = 0;
+    public final static String EXTRA_MESSAGE = "com.sebastianboyd" +
+                                               ".fitness.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +107,17 @@ public class AddJumpsActivity extends BaseActivity implements
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    public void sendData(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        if (jumps > 0) {
+            long[] intentData = new long[3];
+            intentData[0] = activity;
+            intentData[1] = startTime;
+            intentData[2] = endTime;
+            intent.putExtra(EXTRA_MESSAGE, intentData);
+        }
+        startActivity(intent);
+    }
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
