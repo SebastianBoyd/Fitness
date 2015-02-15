@@ -2,6 +2,7 @@ package com.sebastianboyd.fitness;
 
 
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
@@ -87,6 +88,8 @@ public class MainActivity extends BaseActivity {
         }
 
         configureTransitions();
+        Context context = getApplicationContext();
+        Log.v("Value", String.valueOf(SaveData.getMyIntPref(context, "80")));
     }
 
     /**

@@ -13,21 +13,22 @@ public class SaveData {
         return context.getSharedPreferences("myprefs", 0);
     }
 
-    public static String getMyStringPref(Context context) {
-        return getPrefs(context).getString(MY_STRING_PREF, "default");
+    public static String getMyStringPref(Context context, String id) {
+        return getPrefs(context).getString(id, "default");
     }
 
-    public static int getMyIntPref(Context context) {
-        return getPrefs(context).getInt(MY_INT_PREF, 42);
+    public static int getMyIntPref(Context context, String id) {
+        return getPrefs(context).getInt(id, 42);
     }
 
-    public static void setMyStringPref(Context context, String value) {
+    public static void setMyStringPref(Context context, String id,
+                                       String value) {
         // perform validation etc..
-        getPrefs(context).edit().putString(MY_STRING_PREF, value).commit();
+        getPrefs(context).edit().putString(id, value).commit();
     }
 
-    public static void setMyIntPref(Context context, int value) {
+    public static void setMyIntPref(Context context, String id, int value) {
         // perform validation etc..
-        getPrefs(context).edit().putInt(MY_INT_PREF, value).commit();
+        getPrefs(context).edit().putInt(id, value).commit();
     }
 }
