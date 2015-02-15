@@ -13,10 +13,13 @@
     <string name="increment">Increment</string>
     <string name="decrement">Decrement</string>
     <string name="done">Done</string>
+    <string name="reset">Reset</string>
 
     <string name="counter_readyPrompt">Ready to go!</string>
 
-    <string name="transition_pushup_circle">transition_pushup_circle</string>
+    <string name="transition_id_counter_circle">
+        transition_id_counter_circle
+    </string>
 
     <string name="dialog_discard_title">Discard?</string>
     <string name="dialog_discard_message">

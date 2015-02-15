@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= 21) {
             findViewById(R.id.pushup_button).setTransitionName(
                     getResources()
-                            .getString(R.string.transition_pushup_circle));
+                            .getString(R.string.transition_id_counter_circle));
         }
 
         configureTransitions();
@@ -183,8 +183,8 @@ public class MainActivity extends BaseActivity {
         cal.setTime(now);
         long startTime = 1;
         long endTime = cal.getTimeInMillis();
-        if (days > 0){
-            cal.add(Calendar.DAY_OF_YEAR, - days);
+        if (days > 0) {
+            cal.add(Calendar.DAY_OF_YEAR, -days);
             startTime = cal.getTimeInMillis();
         }
 
@@ -206,6 +206,68 @@ public class MainActivity extends BaseActivity {
                 .bucketByTime(1, TimeUnit.DAYS)
                 .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                 .build();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mClient.isConnected()) {
+            mClient.disconnect();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == REQUEST_OAUTH) {
+            authInProgress = false;
+            if (resultCode == RESULT_OK) {
+                // Make sure the app is not already connected or attempting to connect
+                if (!mClient.isConnecting() && !mClient.isConnected()) {
+                    mClient.connect();
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // FUTURE save counters
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(AUTH_PENDING, authInProgress);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Connect to the Fitness API
+        Log.i(TAG, "Connecting...");
+        mClient.connect();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private DataSet insertFitnessData(long activity, long startTime,
@@ -252,16 +314,6 @@ public class MainActivity extends BaseActivity {
         money = (TextView)findViewById(R.id.money);
         String strMoney = String.valueOf(moneyEarned);
         money.setText("$" + strMoney);
-
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mClient.isConnected()) {
-            mClient.disconnect();
-        }
     }
 
     protected Integer[][] parseData(DataReadResult dataReadResult) {
@@ -393,80 +445,29 @@ public class MainActivity extends BaseActivity {
     }
     */
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent data) {
-        if (requestCode == REQUEST_OAUTH) {
-            authInProgress = false;
-            if (resultCode == RESULT_OK) {
-                // Make sure the app is not already connected or attempting to connect
-                if (!mClient.isConnecting() && !mClient.isConnected()) {
-                    mClient.connect();
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        // FUTURE save counters
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(AUTH_PENDING, authInProgress);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Connect to the Fitness API
-        Log.i(TAG, "Connecting...");
-        mClient.connect();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     public void startPushups(View view) {
-        Intent intent = new Intent(this, PushupCounterActivity.class);
-        final View pushupButton = findViewById(R.id.pushup_button);
+        startActivity(
+                new Intent(this, PushupCounterActivity.class),
+                findViewById(R.id.pushup_button),
+                getResources().getString(R.string.transition_id_counter_circle)
+        );
+    }
 
+    public void startActivity(Intent intent, View transitionView,
+                              String transitionID) {
         if (Build.VERSION.SDK_INT >= 21) {
             //noinspection unchecked
-            Bundle options =
-                    ActivityOptions.makeSceneTransitionAnimation(
-                            this,
-                            Pair.create(pushupButton,
-                                        getResources().getString(
-                                                R.string.transition_pushup_circle))
-                            // FUTURE: Make this work at some point
+            Bundle options = ActivityOptions.makeSceneTransitionAnimation(
+                    this,
+                    Pair.create(transitionView, transitionID)
+                    // FUTURE: Make this work at some point
 //                            Pair.create(findViewById(
 //                                                android.R.id.navigationBarBackground),
 //                                        Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME),
 //                            Pair.create(findViewById(
 //                                                android.R.id.statusBarBackground),
 //                                        Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME)
-                    ).toBundle();
+            ).toBundle();
             startActivity(intent, options);
         } else {
             startActivity(intent);
@@ -474,29 +475,11 @@ public class MainActivity extends BaseActivity {
     }
 
     public void startJumps(View view) {
-        Intent intent = new Intent(this, JumpCounterActivity.class);
-        final View jumpButton = findViewById(R.id.jump_button);
-
-        if (Build.VERSION.SDK_INT >= 21) {
-            //noinspection unchecked
-            Bundle options =
-                    ActivityOptions.makeSceneTransitionAnimation(
-                            this,
-                            Pair.create(jumpButton,
-                                        getResources().getString(
-                                                R.string.transition_pushup_circle))
-                            // FUTURE: Make this work at some point
-//                            Pair.create(findViewById(
-//                                                android.R.id.navigationBarBackground),
-//                                        Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME),
-//                            Pair.create(findViewById(
-//                                                android.R.id.statusBarBackground),
-//                                        Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME)
-                    ).toBundle();
-            startActivity(intent, options);
-        } else {
-            startActivity(intent);
-        }
+        startActivity(
+                new Intent(this, JumpCounterActivity.class),
+                findViewById(R.id.jump_button),
+                getResources().getString(R.string.transition_id_counter_circle)
+        );
     }
 
 

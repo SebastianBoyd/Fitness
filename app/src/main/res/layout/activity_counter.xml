@@ -54,6 +54,7 @@
         <ImageButton android:id="@+id/button_reset"
                      style="@style/Button.Round.Small.DarkGrey"
                      android:layout_centerHorizontal="true"
+                     android:contentDescription="@string/reset"
                      android:onClick="resetCount"
                      android:src="@drawable/ic_reset"
                      android:visibility="invisible"/>

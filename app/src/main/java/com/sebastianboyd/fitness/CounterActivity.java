@@ -67,7 +67,7 @@ public abstract class CounterActivity extends BaseActivity implements
         if (Build.VERSION.SDK_INT >= 21) {
             counterCircle.setTransitionName(
                     getResources()
-                            .getString(R.string.transition_pushup_circle));
+                            .getString(R.string.transition_id_counter_circle));
         }
 
         configureTransitions();
