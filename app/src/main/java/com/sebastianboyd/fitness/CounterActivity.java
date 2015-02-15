@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
@@ -19,46 +18,51 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 
-public class AddPushupsActivity extends BaseActivity implements
-                                                     SensorEventListener {
+/**
+ * Base class for counter activities that use sensors.
+ */
+public abstract class CounterActivity extends BaseActivity implements
+                                                           SensorEventListener {
     public final static String EXTRA_MESSAGE = "com.sebastianboyd" +
                                                ".fitness.MESSAGE";
-    static final String STATE_PUSHUPS = "pushup_count";
-    static final String STATE_PAUSED = "pushup_count_paused";
-    private long pushups = 0;
-    private long startTime = 0;
-    private long endTime = 0;
-    private boolean paused = false;
-    private float range;
-    static final int activity = 80; // TODO make static final (this is strength
-    // training)
+    static final String STATE_EXERCISE_COUNT = "exercise_count";
+    static final String STATE_PAUSED = "counter_paused";
 
-    private SensorManager mSensorManager;
-    private Sensor mSensor;
+    // TODO make reference to final field in api
+//    protected abstract static final int EXERCISE_ID; // TODO make this work
+    // I would like to make sendData() automatically inherited, but fields
+    // aren't allowed to be abstract or overwritten for superclass methods.
 
-    private View readyPrompt, resetButton;
-    private Button counterCircle;
-    private ViewGroup pausedControlLayout, resumedControlLayout;
+    protected SensorManager sensorManager;
+    protected Sensor sensor;
+
+    protected boolean paused = false;
+    protected double exerciseCount = 0;
+    protected long startTime = 0;
+    protected long endTime = 0;
+
+    protected View readyPrompt, resetButton;
+    protected Button counterCircle;
+    protected ViewGroup pausedControlLayout, resumedControlLayout;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            pushups = savedInstanceState.getLong(STATE_PUSHUPS);
+            exerciseCount = savedInstanceState.getDouble(STATE_EXERCISE_COUNT);
             paused = savedInstanceState.getBoolean(STATE_PAUSED);
         }
-        setContentView(R.layout.activity_add_pushups);
+        setContentView(R.layout.activity_counter);
 
-        counterCircle = (Button) findViewById(R.id.pushups_counter_circle);
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        range = mSensor.getMaximumRange();
-        readyPrompt = findViewById(R.id.pushup_counter_ready_prompt);
-        resetButton = findViewById(R.id.button_reset_pushups);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+        counterCircle = (Button) findViewById(R.id.counter_circle);
+        readyPrompt = findViewById(R.id.counter_ready_prompt);
+        resetButton = findViewById(R.id.button_reset);
         pausedControlLayout = (ViewGroup) findViewById(
-                R.id.pushup_paused_control_layout);
+                R.id.paused_control_layout);
         resumedControlLayout = (ViewGroup) findViewById(
-                R.id.pushup_resumed_control_layout);
+                R.id.resumed_control_layout);
 
         if (Build.VERSION.SDK_INT >= 21) {
             counterCircle.setTransitionName(
@@ -128,17 +132,17 @@ public class AddPushupsActivity extends BaseActivity implements
     }
 
     /**
-     * Ensure the pushup count is reflected in the activity's views.
+     * Ensure the exercise count is reflected in the activity's views.
      */
     public void updateExerciseCount() {
-        if (pushups < 0) pushups = 0;
-        String out = String.valueOf(pushups);
+        if (exerciseCount < 0) exerciseCount = 0;
+        String out = String.valueOf((int) exerciseCount);
         counterCircle.setText(out);
 
         // FUTURE: animate hide/show
         // Especially hide, since they will most likely be using the sensor to
-        // add pushups, so they won't see the animation
-        if (pushups == 0) {
+        // add exerciseCount, so they won't see the animation
+        if ((int) exerciseCount == 0) {
             readyPrompt.setVisibility(View.VISIBLE);
             resetButton.setVisibility(View.INVISIBLE);
 
@@ -153,41 +157,19 @@ public class AddPushupsActivity extends BaseActivity implements
     /**
      * Ensure everything matches the pause state.
      */
-    public void updatePauseState() {
-        // FUTURE: show time data between first and last pushup on pause
-        // Should only count pushups detected by the sensor.
-        // FUTURE: animate all of the transitions
-        Drawable newBG;
-        if (paused) {
-            pausedControlLayout.setVisibility(View.VISIBLE);
-            resumedControlLayout.setVisibility(View.GONE);
-            newBG = getResources().getDrawable(
-                    R.drawable.bg_button_round_darkgrey);
-        } else {
-            resumedControlLayout.setVisibility(View.VISIBLE);
-            pausedControlLayout.setVisibility(View.GONE);
-            if (pushups == 0) {
-                newBG = getResources()
-                        .getDrawable(R.drawable.shape_oval_pushups);
-            } else {
-                newBG = getResources().getDrawable(
-                        R.drawable.bg_button_round_pushups);
-            }
-        }
-        counterCircle.setBackground(newBG);
-    }
+    public abstract void updatePauseState();
 
     @Override
     protected void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener(this);
+        sensorManager.unregisterListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, mSensor,
-                                        SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensor,
+                                       SensorManager.SENSOR_DELAY_NORMAL);
         updatePauseState();
         // TODO: this is an extension of the hacky configureTransition
 //        if (Build.VERSION.SDK_INT < 21) {
@@ -197,7 +179,7 @@ public class AddPushupsActivity extends BaseActivity implements
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putLong(STATE_PUSHUPS, pushups);
+        savedInstanceState.putDouble(STATE_EXERCISE_COUNT, exerciseCount);
         savedInstanceState.putBoolean(STATE_PAUSED, paused);
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -240,6 +222,13 @@ public class AddPushupsActivity extends BaseActivity implements
             return;
         }
 
+        DialogInterface.OnClickListener positiveListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        positiveCallback.fire();
+                    }
+                };
         DialogInterface.OnClickListener negativeListener =
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -247,28 +236,20 @@ public class AddPushupsActivity extends BaseActivity implements
                     }
                 };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.dialog_discard_title)
                 .setMessage(R.string.dialog_discard_message)
                 .setPositiveButton(R.string.dialog_discard_accept,
-                                   new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(
-                                               DialogInterface dialog,
-                                               int which) {
-                                           positiveCallback.fire();
-                                       }
-                                   })
+                                   positiveListener)
                 .setNegativeButton(R.string.dialog_discard_cancel,
                                    negativeListener)
-                .setCancelable(true);
-
-        AlertDialog dialog = builder.create();
+                .setCancelable(true)
+                .create();
         dialog.show();
     }
 
     public boolean hasUnsavedData() {
-        return pushups > 0;
+        return (int) exerciseCount > 0;
     }
 
     @Override
@@ -279,71 +260,76 @@ public class AddPushupsActivity extends BaseActivity implements
                 discard();
                 // Just to make the animation pretty.
                 counterCircle.setText("");
-                AddPushupsActivity.super.onBackPressed();
+                CounterActivity.super.onBackPressed();
             }
         };
         promptDiscard(onDiscard);
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        float in = event.values[0];
-        if (in < range && !paused) {
-            pushups++;
-            if (pushups == 1){
-                startTime = java.lang.System.currentTimeMillis();
+    protected void updatePauseState(int counterCircleActiveBG,
+                                    int counterCircleUnclickableBG) {
+        // FUTURE: show time data between first and last pushup on pause
+        // Should only count exerciseCount detected by the sensor.
+        // FUTURE: animate all of the transitions
+        Drawable newBG;
+        if (paused) {
+            pausedControlLayout.setVisibility(View.VISIBLE);
+            resumedControlLayout.setVisibility(View.GONE);
+            newBG = getResources().getDrawable(
+                    R.drawable.bg_button_round_darkgrey);
+        } else {
+            resumedControlLayout.setVisibility(View.VISIBLE);
+            pausedControlLayout.setVisibility(View.GONE);
+            if ((int) exerciseCount == 0) {
+                newBG = getResources().getDrawable(counterCircleUnclickableBG);
+            } else {
+                newBG = getResources().getDrawable(counterCircleActiveBG);
             }
-            endTime = java.lang.System.currentTimeMillis();
-            updateExerciseCount();
         }
+        counterCircle.setBackground(newBG);
     }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    protected Intent buildDataSenderIntent(int exerciseID) {
+        Intent intent = new Intent(this, MainActivity.class);
+        if (exerciseCount > 0) {
+            long[] intentData = new long[3];
+            intentData[0] = exerciseID;
+            intentData[1] = startTime;
+            intentData[2] = endTime;
+            intent.putExtra(EXTRA_MESSAGE, intentData);
+        }
+        return intent;
     }
 
-    public void addPushup(View view) {
-        pushups++;
+    public void incrementCount(View view) {
+        exerciseCount++;
         updateExerciseCount();
     }
 
-    public void removePushup(View view) {
-        pushups--;
+    public void decrementCount(View view) {
+        exerciseCount--;
         updateExerciseCount();
     }
 
     public void togglePause(View view) {
-        // Cannot be paused if pushups == 0
-        paused = pushups > 0 && !paused;
+        // Cannot be paused if exerciseCount == 0
+        paused = exerciseCount > 0 && !paused;
         updatePauseState();
     }
 
     public void resetCount(View view) {
         // FUTURE: animate this action
         // Maybe a circular reveal.
-        pushups = 0;
+        exerciseCount = 0;
         updateExerciseCount();
     }
 
     /**
-     * Commit the pushup count and associated metadata to the server.
+     * Commit the exercise count and associated metadata to the server.
      *
      * @param view
      *         A reference to the okay button calling this method.
      */
     public void sendData(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
-        if (pushups > 0) {
-            long[] intentData = new long[3];
-            intentData[0] = activity;
-            intentData[1] = startTime;
-            intentData[2] = endTime;
-            intent.putExtra(EXTRA_MESSAGE, intentData);
-        }
-        startActivity(intent);
-    }
-
-    public static abstract class Callback {
-        public abstract void fire();
     }
 }

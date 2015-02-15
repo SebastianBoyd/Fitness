@@ -1,34 +1,34 @@
-<RelativeLayout android:id="@+id/layout_main_activity_root"
+<RelativeLayout android:id="@+id/main_activity_layout_root"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".MainActivity">
 
-    <LinearLayout android:id="@+id/add_pushup_container"
+    <LinearLayout android:id="@+id/pushup_button_container"
                   style="@style/VerticalLayoutElement.AddExercise"
                   android:onClick="startPushups">
 
-        <ImageView android:id="@+id/add_pushup_button"
+        <ImageView android:id="@+id/pushup_button"
                    style="@style/CircleIcon.Pushups"
                    android:contentDescription="@string/add_pushups_button"/>
 
-        <TextView android:id="@+id/addPushupButtonLabel"
+        <TextView android:id="@+id/pushup_button_label"
                   style="@style/Text.Label.AddExercise"
                   android:text="@string/add_pushups_button"/>
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/addJumpsContainer"
+    <LinearLayout android:id="@+id/jump_button_container"
                   style="@style/VerticalLayoutElement.AddExercise"
-                  android:layout_below="@id/add_pushup_container"
+                  android:layout_below="@id/pushup_button_container"
                   android:onClick="startJumps">
 
-        <ImageView android:id="@+id/addJumpsButton"
+        <ImageView android:id="@+id/jump_button"
                    style="@style/CircleIcon.Jumps"
                    android:contentDescription="@string/add_jumps_button"
                    android:onClick="startJumps"/>
 
-        <TextView android:id="@+id/addJumpsButtonLabel"
+        <TextView android:id="@+id/jump_button_label"
                   style="@style/Text.Label.AddExercise"
                   android:text="@string/add_jumps_button"/>
     </LinearLayout>
@@ -36,20 +36,19 @@
     <TextView android:id="@+id/life"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_below="@+id/addJumpsContainer"
+              android:layout_below="@+id/jump_button_container"
               android:layout_centerHorizontal="true"
+              android:text="0"
               android:textSize="50sp"
-              android:visibility="visible"
-              android:text="0"/>
+              android:visibility="visible"/>
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="$0"
-            android:id="@+id/money"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="118dp"/>
+    <TextView android:id="@+id/money"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentBottom="true"
+              android:layout_centerHorizontal="true"
+              android:layout_marginBottom="118dp"
+              android:text="$0"
+              android:textAppearance="?android:attr/textAppearanceLarge"/>
 
 </RelativeLayout>

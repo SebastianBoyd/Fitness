@@ -1,4 +1,4 @@
-<RelativeLayout android:id="@+id/pushupsActivity"
+<RelativeLayout android:id="@+id/counter_activity_root_layout"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
@@ -8,50 +8,50 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                tools:context="com.sebastianboyd.fitness.AddPushupsActivity">
+                tools:context="com.sebastianboyd.fitness.PushupCounterActivity">
 
-    <Button android:id="@+id/pushups_counter_circle"
+    <Button android:id="@+id/counter_circle"
             style="@style/Button.Round.CounterCircle"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:onClick="togglePause"/>
 
-    <TextView android:id="@+id/pushup_counter_ready_prompt"
+    <TextView android:id="@+id/counter_ready_prompt"
               style="@style/Text.Label.CountReady"
-              android:layout_above="@id/pushups_counter_circle"
+              android:layout_above="@id/counter_circle"
               android:text="@string/counter_readyPrompt"/>
 
-    <RelativeLayout android:id="@+id/pushup_paused_control_layout"
+    <RelativeLayout android:id="@+id/paused_control_layout"
                     style="@style/BottomControlLayout">
 
-        <ImageButton android:id="@+id/button_decrement_pushups"
+        <ImageButton android:id="@+id/button_decrement"
                      style="@style/Button.Round.Small.LightGrey"
                      android:layout_alignParentLeft="true"
                      android:layout_alignParentStart="true"
                      android:contentDescription="@string/decrement"
-                     android:onClick="removePushup"
+                     android:onClick="decrementCount"
                      android:src="@drawable/ic_chevron_left"/>
 
-        <ImageButton android:id="@+id/button_commit_pushups"
+        <ImageButton android:id="@+id/button_send_data"
                      style="@style/Button.Round.Small.Green"
                      android:layout_centerHorizontal="true"
                      android:contentDescription="@string/done"
                      android:onClick="sendData"
                      android:src="@drawable/ic_done"/>
 
-        <ImageButton android:id="@+id/button_increment_pushups"
+        <ImageButton android:id="@+id/button_increment"
                      style="@style/Button.Round.Small.LightGrey"
                      android:layout_alignParentEnd="true"
                      android:layout_alignParentRight="true"
                      android:contentDescription="@string/increment"
-                     android:onClick="addPushup"
+                     android:onClick="incrementCount"
                      android:src="@drawable/ic_chevron_right"/>
     </RelativeLayout>
 
-    <RelativeLayout android:id="@+id/pushup_resumed_control_layout"
+    <RelativeLayout android:id="@+id/resumed_control_layout"
                     style="@style/BottomControlLayout">
 
-        <ImageButton android:id="@+id/button_reset_pushups"
+        <ImageButton android:id="@+id/button_reset"
                      style="@style/Button.Round.Small.DarkGrey"
                      android:layout_centerHorizontal="true"
                      android:onClick="resetCount"

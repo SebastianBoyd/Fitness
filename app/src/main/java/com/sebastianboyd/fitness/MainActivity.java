@@ -33,6 +33,7 @@ import com.google.android.gms.fitness.result.DataReadResult;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -68,8 +69,9 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent intent = getIntent();
-        inputData = intent.getLongArrayExtra(AddPushupsActivity.EXTRA_MESSAGE);
-        Log.v(TAG, String.valueOf(inputData));
+        inputData =
+                intent.getLongArrayExtra(PushupCounterActivity.EXTRA_MESSAGE);
+        Log.v(TAG, Arrays.toString(inputData));
 
         if (savedInstanceState != null) {
             authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
@@ -79,7 +81,7 @@ public class MainActivity extends BaseActivity {
         getData(7);
 
         if (Build.VERSION.SDK_INT >= 21) {
-            findViewById(R.id.add_pushup_button).setTransitionName(
+            findViewById(R.id.pushup_button).setTransitionName(
                     getResources()
                             .getString(R.string.transition_pushup_circle));
         }
@@ -446,8 +448,8 @@ public class MainActivity extends BaseActivity {
     }
 
     public void startPushups(View view) {
-        Intent intent = new Intent(this, AddPushupsActivity.class);
-        final View pushupButton = findViewById(R.id.add_pushup_button);
+        Intent intent = new Intent(this, PushupCounterActivity.class);
+        final View pushupButton = findViewById(R.id.pushup_button);
 
         if (Build.VERSION.SDK_INT >= 21) {
             //noinspection unchecked
@@ -472,8 +474,29 @@ public class MainActivity extends BaseActivity {
     }
 
     public void startJumps(View view) {
-        Intent intent = new Intent(this, AddJumpsActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent(this, JumpCounterActivity.class);
+        final View jumpButton = findViewById(R.id.jump_button);
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            //noinspection unchecked
+            Bundle options =
+                    ActivityOptions.makeSceneTransitionAnimation(
+                            this,
+                            Pair.create(jumpButton,
+                                        getResources().getString(
+                                                R.string.transition_pushup_circle))
+                            // FUTURE: Make this work at some point
+//                            Pair.create(findViewById(
+//                                                android.R.id.navigationBarBackground),
+//                                        Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME),
+//                            Pair.create(findViewById(
+//                                                android.R.id.statusBarBackground),
+//                                        Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME)
+                    ).toBundle();
+            startActivity(intent, options);
+        } else {
+            startActivity(intent);
+        }
     }
 
 
