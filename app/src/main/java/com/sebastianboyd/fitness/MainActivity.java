@@ -89,7 +89,7 @@ public class MainActivity extends BaseActivity {
         configureTransitions();
         Context context = getApplicationContext();
         int income = SaveData.getMyIntPref(context, "income");
-        if (income != 42){
+        if (income != 0){
             salary = income;
         }
         Log.v("Data", String.valueOf(salary));

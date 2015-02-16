@@ -18,7 +18,7 @@ public class SaveData {
     }
 
     public static int getMyIntPref(Context context, String id) {
-        return getPrefs(context).getInt(id, 42);
+        return getPrefs(context).getInt(id, 0);
     }
 
     public static void setMyStringPref(Context context, String id,
