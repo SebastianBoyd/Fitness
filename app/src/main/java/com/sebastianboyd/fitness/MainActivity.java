@@ -2,6 +2,7 @@ package com.sebastianboyd.fitness;
 
 
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
@@ -39,7 +40,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-// Sebastian TODO add preferences
 // Zander TODO support landscape by using fragments
 // Zander TODO rework activity transtions
 
@@ -94,6 +94,12 @@ public class MainActivity extends BaseActivity {
                             .getString(R.string.transition_id_counter_circle));
         }
         configureTransitions();
+        Context context = getApplicationContext();
+        int income = SaveData.getMyIntPref(context, "income");
+        if (income != 0){
+            salary = income;
+        }
+        Log.v("Data", String.valueOf(salary));
     }
 
     /**
@@ -279,7 +285,8 @@ public class MainActivity extends BaseActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_settings:
-                return true;
+                Intent intent = new Intent(this, Preferences.class);
+                startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -364,6 +371,7 @@ public class MainActivity extends BaseActivity {
                         }
                         activityArray[activityInt][0] =
                                 activityArray[activityInt][0] + durationInt;
+
 
                     }
                 }

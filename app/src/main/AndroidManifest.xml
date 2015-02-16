@@ -1,44 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.sebastianboyd.fitness"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sebastianboyd.fitness" >
 
     <application
-            android:allowBackup="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/title_app">
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/title_app" >
         <meta-data
-                android:name="com.google.android.gms.version"
-                android:value="@integer/google_play_services_version"/>
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
-                android:name=".MainActivity"
-                android:label="@string/title_app"
-                android:theme="@style/Theme.Main">
+            android:name=".MainActivity"
+            android:label="@string/title_app"
+            android:theme="@style/Theme.Main" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-                android:name=".PushupCounterActivity"
-                android:label="@string/title_activity_pushup_counter"
-                android:parentActivityName=".MainActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/Theme.Main.PushupsActivity">
+            android:name=".PushupCounterActivity"
+            android:label="@string/title_activity_pushup_counter"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Main.PushupsActivity" >
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.sebastianboyd.fitness.MainActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sebastianboyd.fitness.MainActivity" />
         </activity>
         <activity
-                android:name=".JumpCounterActivity"
-                android:label="@string/title_activity_jumping_jack"
-                android:parentActivityName=".MainActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/Theme.Main.JumpsActivity">
+            android:name=".JumpCounterActivity"
+            android:label="@string/title_activity_jumping_jack"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Main.JumpsActivity" >
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.sebastianboyd.fitness.MainActivity"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sebastianboyd.fitness.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Preferences"
+            android:label="@string/title_activity_preferences"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sebastianboyd.fitness.MainActivity" />
         </activity>
     </application>
 

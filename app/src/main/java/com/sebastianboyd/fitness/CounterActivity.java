@@ -7,6 +7,7 @@ package com.sebastianboyd.fitness;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -17,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -295,6 +297,30 @@ public abstract class CounterActivity extends BaseActivity implements
     }
 
     protected Intent buildDataSenderIntent(int exerciseID) {
+        Context context = getApplicationContext();
+        // Save total exercise count
+        int previousTotalCount = SaveData.getMyIntPref(context,
+                                                  String.valueOf(exerciseID)
+                                                  + "totalCount");
+        SaveData.setMyIntPref(context, String.valueOf(exerciseID)
+                                       + "totalCount", previousTotalCount + (int)
+                exerciseCount);
+        // Save total time
+        long thisTime = endTime - startTime;
+        int previousTotalTime = SaveData.getMyIntPref(context,
+                                                       String.valueOf(exerciseID)
+                                                       + "totalTime");
+        SaveData.setMyIntPref(context, String.valueOf(exerciseID)
+                                       + "totalTime",
+                              previousTotalTime + (int) thisTime);
+        // TODO Zander: implement this and display to user
+        Log.v("Stats", String.valueOf(SaveData.getMyIntPref(context,
+                                                            String.valueOf
+                                                                    (exerciseID) + "totalCount")));
+        Log.v("Stats", String.valueOf(SaveData.getMyIntPref(context,
+                                                            String.valueOf
+                                                                    (exerciseID) + "totalTime")));
+
         Intent intent = new Intent(this, MainActivity.class);
         if (exerciseCount > 0) {
             long[] intentData = new long[3];
