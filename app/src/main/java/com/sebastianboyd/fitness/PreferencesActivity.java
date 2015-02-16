@@ -3,6 +3,7 @@ package com.sebastianboyd.fitness;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -26,7 +27,11 @@ public class PreferencesActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         save();
-        super.onBackPressed();
+
+        // HACK ALERT!
+        // Zander and Sebastian TODO understand back behavior and unhack
+//        super.onBackPressed();
+        NavUtils.navigateUpFromSameTask(this);
     }
 
     private void save() {
@@ -47,8 +52,8 @@ public class PreferencesActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 save();
-//                finish();
-                return false;
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

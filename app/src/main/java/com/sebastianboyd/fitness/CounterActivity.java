@@ -261,16 +261,19 @@ public abstract class CounterActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        Callback onDiscard = new Callback() {
-            @Override
-            public void fire() {
-                discard();
-                // Just to make the animation pretty.
-                counterCircle.setText("");
-                CounterActivity.super.onBackPressed();
-            }
-        };
-        promptDiscard(onDiscard);
+        // HACK ALERT!
+        // Zander and Sebastian TODO understand back behavior and unhack
+//        Callback onDiscard = new Callback() {
+//            @Override
+//            public void fire() {
+//                discard();
+//                // Just to make the animation pretty.
+//                counterCircle.setText("");
+//                CounterActivity.super.onBackPressed();
+//            }
+//        };
+//        promptDiscard(onDiscard);
+        promptDiscard();
     }
 
     protected void updatePauseState(int counterCircleActiveBG,
