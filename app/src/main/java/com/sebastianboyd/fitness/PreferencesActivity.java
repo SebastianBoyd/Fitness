@@ -1,7 +1,6 @@
 package com.sebastianboyd.fitness;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +8,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 
-public class PreferencesActivity extends Activity {
+public class PreferencesActivity extends BaseActivity {
 
     EditText incomeEditText;
 
@@ -20,7 +19,7 @@ public class PreferencesActivity extends Activity {
         incomeEditText = (EditText) findViewById(R.id.editText);
 
         Context context = getApplicationContext();
-        int income = SaveData.getMyIntPref(context, "income");
+        int income = SaveData.getIntPref(context, SaveData.INCOME);
         incomeEditText.setText(Integer.toString(income));
     }
 
@@ -28,17 +27,6 @@ public class PreferencesActivity extends Activity {
     public void onBackPressed() {
         save();
         super.onBackPressed();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                save();
-//                finish();
-                return false;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void save() {
@@ -51,6 +39,17 @@ public class PreferencesActivity extends Activity {
             return;
         }
         Context context = getApplicationContext();
-        SaveData.setMyIntPref(context, "income", income);
+        SaveData.setIntPref(context, SaveData.INCOME, income);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                save();
+//                finish();
+                return false;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

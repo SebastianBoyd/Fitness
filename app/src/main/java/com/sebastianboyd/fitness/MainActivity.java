@@ -100,11 +100,11 @@ public class MainActivity extends BaseActivity {
         }
         configureTransitions();
         Context context = getApplicationContext();
-        int income = SaveData.getMyIntPref(context, "income");
+        int income = SaveData.getIntPref(context, SaveData.INCOME);
         if (income != 0) {
             salary = income;
         } else {
-            SaveData.setMyIntPref(context, "income", salary);
+            SaveData.setIntPref(context, SaveData.INCOME, salary);
         }
         Log.v("Data", String.valueOf(salary));
     }
@@ -261,6 +261,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         new InsertAndVerifyDataTask().execute();
+        Log.d("Lifecycle", "Resuming...");
     }
 
     @Override
@@ -273,9 +274,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // Connect to the Fitness API
-        Log.i(TAG, "Connecting...");
         apiClient.connect();
+        Log.i(TAG, "Connecting...");
     }
 
     @Override

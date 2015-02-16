@@ -299,27 +299,23 @@ public abstract class CounterActivity extends BaseActivity implements
     protected Intent buildDataSenderIntent(int exerciseID) {
         Context context = getApplicationContext();
         // Save total exercise count
-        int previousTotalCount = SaveData.getMyIntPref(context,
-                                                  String.valueOf(exerciseID)
-                                                  + "totalCount");
-        SaveData.setMyIntPref(context, String.valueOf(exerciseID)
-                                       + "totalCount", previousTotalCount + (int)
-                exerciseCount);
+        int previousTotalCount = SaveData.getIntPref(
+                context, String.valueOf(exerciseID) + SaveData.TOTAL_COUNT);
+        SaveData.setIntPref(context,
+                            String.valueOf(exerciseID) + SaveData.TOTAL_COUNT,
+                            previousTotalCount + (int) exerciseCount);
         // Save total time
         long thisTime = endTime - startTime;
-        int previousTotalTime = SaveData.getMyIntPref(context,
-                                                       String.valueOf(exerciseID)
-                                                       + "totalTime");
-        SaveData.setMyIntPref(context, String.valueOf(exerciseID)
-                                       + "totalTime",
-                              previousTotalTime + (int) thisTime);
-        // TODO Zander: implement this and display to user
-        Log.v("Stats", String.valueOf(SaveData.getMyIntPref(context,
-                                                            String.valueOf
-                                                                    (exerciseID) + "totalCount")));
-        Log.v("Stats", String.valueOf(SaveData.getMyIntPref(context,
-                                                            String.valueOf
-                                                                    (exerciseID) + "totalTime")));
+        int previousTotalTime = SaveData.getIntPref(
+                context, String.valueOf(exerciseID) + SaveData.TOTAL_TIME);
+        SaveData.setIntPref(context,
+                            String.valueOf(exerciseID) + SaveData.TOTAL_TIME,
+                            previousTotalTime + (int) thisTime);
+        // Zander TODO implement this and display to user
+        Log.v("Stats", String.valueOf(SaveData.getIntPref(
+                context, String.valueOf(exerciseID) + "totalCount")));
+        Log.v("Stats", String.valueOf(SaveData.getIntPref(
+                context, String.valueOf(exerciseID) + "totalTime")));
 
         Intent intent = new Intent(this, MainActivity.class);
         if (exerciseCount > 0) {
