@@ -40,7 +40,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-//TODO add preferences
 
 public class MainActivity extends BaseActivity {
 
@@ -89,7 +88,11 @@ public class MainActivity extends BaseActivity {
 
         configureTransitions();
         Context context = getApplicationContext();
-        Log.v("Value", String.valueOf(SaveData.getMyIntPref(context, "80")));
+        int income = SaveData.getMyIntPref(context, "income");
+        if (income != 42){
+            salary = income;
+        }
+        Log.v("Data", String.valueOf(salary));
     }
 
     /**

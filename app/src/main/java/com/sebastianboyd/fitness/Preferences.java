@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
-// TODO for you Zander make look nice
+// TODO for you Zander make look nice in xml
 public class Preferences extends Activity {
 
     @Override
