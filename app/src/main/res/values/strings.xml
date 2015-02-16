@@ -27,7 +27,7 @@
     </string>
     <string name="dialog_discard_accept">Discard</string>
     <string name="dialog_discard_cancel">Cancel</string>
-    <string name="title_activity_preferences">Preferences</string>
+    <string name="title_activity_preferences">Settings</string>
     <string name="income">Yearly Income (USD)</string>
 
 

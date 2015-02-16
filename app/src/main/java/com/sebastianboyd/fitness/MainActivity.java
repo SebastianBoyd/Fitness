@@ -60,6 +60,11 @@ public class MainActivity extends BaseActivity {
     private boolean authInProgress = false;
     private GoogleApiClient apiClient = null;
 
+    /**
+     * Annual income in USD.
+     * <p/>
+     * Defaults to $60,000.
+     */
     private int salary = 60000;
 
     private TextView lifeTextView, moneyTextView;
@@ -96,8 +101,10 @@ public class MainActivity extends BaseActivity {
         configureTransitions();
         Context context = getApplicationContext();
         int income = SaveData.getMyIntPref(context, "income");
-        if (income != 0){
+        if (income != 0) {
             salary = income;
+        } else {
+            SaveData.setMyIntPref(context, "income", salary);
         }
         Log.v("Data", String.valueOf(salary));
     }
@@ -181,8 +188,7 @@ public class MainActivity extends BaseActivity {
                                 }
                             }
                         }
-                )
-                .build();
+                ).build();
     }
 
     private DataReadRequest getData() {
@@ -254,6 +260,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Sebastian TODO reload the statistics
     }
 
     @Override
@@ -285,7 +292,7 @@ public class MainActivity extends BaseActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_settings:
-                Intent intent = new Intent(this, Preferences.class);
+                Intent intent = new Intent(this, PreferencesActivity.class);
                 startActivity(intent);
         }
 
@@ -371,7 +378,6 @@ public class MainActivity extends BaseActivity {
                         }
                         activityArray[activityInt][0] =
                                 activityArray[activityInt][0] + durationInt;
-
 
                     }
                 }
