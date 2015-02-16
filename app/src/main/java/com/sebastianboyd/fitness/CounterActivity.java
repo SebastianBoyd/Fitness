@@ -308,6 +308,7 @@ public abstract class CounterActivity extends BaseActivity implements
         SaveData.setMyIntPref(context, String.valueOf(exerciseID)
                                        + "totalTime",
                               previousTotalTime + (int) thisTime);
+        // TODO Zander: implement this and display to user
         Log.v("Stats", String.valueOf(SaveData.getMyIntPref(context,
                                                             String.valueOf
                                                                     (exerciseID) + "totalCount")));
