@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
@@ -294,8 +293,27 @@ public abstract class CounterActivity extends BaseActivity implements
 
     protected Intent buildDataSenderIntent(int exerciseID) {
         Context context = getApplicationContext();
-        SaveData.setMyIntPref(context, String.valueOf(exerciseID),
-                              (int) exerciseCount);
+        // Save total exercise count
+        int previousTotalCount = SaveData.getMyIntPref(context,
+                                                  String.valueOf(exerciseID)
+                                                  + "totalCount");
+        SaveData.setMyIntPref(context, String.valueOf(exerciseID)
+                                       + "totalCount", previousTotalCount + (int)
+                exerciseCount);
+        // Save total time
+        long thisTime = endTime - startTime;
+        int previousTotalTime = SaveData.getMyIntPref(context,
+                                                       String.valueOf(exerciseID)
+                                                       + "totalTime");
+        SaveData.setMyIntPref(context, String.valueOf(exerciseID)
+                                       + "totalTime",
+                              previousTotalTime + (int) thisTime);
+        Log.v("Stats", String.valueOf(SaveData.getMyIntPref(context,
+                                                            String.valueOf
+                                                                    (exerciseID) + "totalCount")));
+        Log.v("Stats", String.valueOf(SaveData.getMyIntPref(context,
+                                                            String.valueOf
+                                                                    (exerciseID) + "totalTime")));
 
         Intent intent = new Intent(this, MainActivity.class);
         if (exerciseCount > 0) {
