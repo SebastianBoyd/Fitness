@@ -40,6 +40,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sebastianboyd.fitness.MainActivity" />
         </activity>
+        <activity
+            android:name=".Preferences"
+            android:label="@string/title_activity_preferences"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sebastianboyd.fitness.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
