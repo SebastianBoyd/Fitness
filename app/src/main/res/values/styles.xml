@@ -5,21 +5,21 @@
     </style>
 
     <style name="Button.Round.Small">
-        <item name="android:layout_width">@dimen/button_round_small_diameter</item>
-        <item name="android:layout_height">@dimen/button_round_small_diameter</item>
-        <item name="android:layout_margin">@dimen/button_round_small_margins</item>
-    </style>
-
-    <style name="Button.Round.Small.Pushups">
-        <item name="android:background">@drawable/bg_button_round_pushups</item>
-    </style>
-
-    <style name="Button.Round.Small.Jumps">
-        <item name="android:background">@drawable/bg_button_round_jumps</item>
+        <item name="android:layout_width">
+            @dimen/button_round_small_diameter
+        </item>
+        <item name="android:layout_height">
+            @dimen/button_round_small_diameter
+        </item>
+        <item name="android:layout_margin">
+            @dimen/button_round_small_margins
+        </item>
     </style>
 
     <style name="Button.Round.Small.LightGrey">
-        <item name="android:background">@drawable/bg_button_round_lightgrey</item>
+        <item name="android:background">
+            @drawable/bg_button_round_lightgrey
+        </item>
     </style>
 
     <style name="Button.Round.Small.DarkGrey">
@@ -42,7 +42,18 @@
     <style name="CircleIcon">
         <item name="android:layout_width">@dimen/circle_icon_diameter</item>
         <item name="android:layout_height">@dimen/circle_icon_diameter</item>
-        <item name="android:layout_margin">@dimen/circle_icon_margins</item>
+        <item name="android:layout_marginTop">
+            @dimen/circle_icon_vertical_margin
+        </item>
+        <item name="android:layout_marginBottom">
+            @dimen/circle_icon_vertical_margin
+        </item>
+        <item name="android:layout_marginLeft">
+            @dimen/circle_icon_horizontal_margin
+        </item>
+        <item name="android:layout_marginRight">
+            @dimen/circle_icon_horizontal_margin
+        </item>
     </style>
 
     <!-- TODO: optimize dpi for icons -->
@@ -57,15 +68,18 @@
     </style>
 
     <style name="Text.Label"
-           parent="Base.TextAppearance.AppCompat.Large" >
+           parent="Base.TextAppearance.AppCompat.Large">
     </style>
 
     <style name="Text.Label.CountReady">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginBottom">@dimen/counter_readyPrompt_margin</item>
-        <item name="android:textSize">@dimen/counter_readyPrompt_text_size
+        <item name="android:layout_marginBottom">
+            @dimen/counter_readyPrompt_margin
+        </item>
+        <item name="android:textSize">
+            @dimen/counter_readyPrompt_text_size
         </item>
         <item name="android:textColor">@color/dark_grey</item>
         <item name="android:fontFamily">sans-serif-light</item>
@@ -75,6 +89,21 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginLeft">
+            @dimen/circle_icon_label_margin
+        </item>
+        <item name="android:textColor">@color/dark_grey</item>
+    </style>
+
+    <style name="Text.Label.StatLabel">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="Text.Label.StatNumber">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/dark_grey</item>
     </style>
 
@@ -84,8 +113,26 @@
     </style>
 
     <style name="VerticalLayoutElement.AddExercise">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:background">
+            ?android:attr/selectableItemBackground
+        </item>
         <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="VerticalLayoutElement.StatWrapper">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginLeft">
+            @dimen/stat_label_horizontal_margin
+        </item>
+        <item name="android:layout_marginRight">
+            @dimen/stat_label_horizontal_margin
+        </item>
+        <item name="android:layout_marginTop">
+            @dimen/stat_label_vertical_margin
+        </item>
+        <item name="android:layout_marginBottom">
+            @dimen/stat_label_vertical_margin
+        </item>
     </style>
 
     <style name="BottomControlLayout">
@@ -93,5 +140,11 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="HorizontalBreak">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/horizontal_break_width</item>
+        <item name="android:background">@color/light_grey</item>
     </style>
 </resources>

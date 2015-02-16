@@ -27,4 +27,13 @@
     </string>
     <string name="dialog_discard_accept">Discard</string>
     <string name="dialog_discard_cancel">Cancel</string>
+
+    <string name="stat_label_life"><!--Lifetime Saved--></string>
+    <string name="stat_label_money"><!--Money Earned--></string>
+    <string name="stat_description_life">
+        Approximate amount of lifetime saved through exercise.
+    </string>
+    <string name="stat_description_money">
+        Amount of money you could earn in the lifetime you have saved.
+    </string>
 </resources>

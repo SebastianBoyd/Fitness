@@ -1,6 +1,11 @@
 package com.sebastianboyd.fitness;
 
 
+// Zander TODO add animations
+// Zander TODO show time in pause screen
+// Sebastian and/or Zander TODO get their average time, and compare it
+
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;

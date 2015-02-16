@@ -39,74 +39,77 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-//TODO add preferences
+// Sebastian TODO add preferences
+// Zander TODO support landscape by using fragments
+// Zander TODO rework activity transtions
+
 
 public class MainActivity extends BaseActivity {
 
     private static final int REQUEST_OAUTH = 1;
     /**
      * Track whether an authorization activity is stacking over the current
-     * activity, i.e. when
-     * a known auth error is being resolved, such as showing the account
-     * chooser
-     * or presenting a
-     * consent dialog. This avoids common duplications as might happen on
-     * screen
-     * rotations, etc.
+     * activity, i.e. when a known auth error is being resolved, such as
+     * showing the account chooser or presenting a consent dialog. This avoids
+     * common duplications as might happen on screen rotations, etc.
      */
     private static final String AUTH_PENDING = "auth_state_pending";
     private static final String TAG = "Fit Auth";
     private static final String DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
-    public long lifeGained = 0;
-    private boolean authInProgress = false;
-    private GoogleApiClient mClient = null;
-    private int salary = 60000;
-    private double moneyEarned = 0;
     private long[] inputData = null;
+    private boolean authInProgress = false;
+    private GoogleApiClient apiClient = null;
+
+    private int salary = 60000;
+
+    private TextView lifeTextView, moneyTextView;
+
+    /**
+     * Amount of bonus life gained through exercise in milliseconds.
+     */
+    private long lifeGained = 0;
+    private double moneyEarned = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Intent intent = getIntent();
         inputData =
                 intent.getLongArrayExtra(PushupCounterActivity.EXTRA_MESSAGE);
         Log.v(TAG, Arrays.toString(inputData));
-
         if (savedInstanceState != null) {
             authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
         }
 
+        lifeTextView = (TextView) findViewById(R.id.life_number);
+        moneyTextView = (TextView) findViewById(R.id.money_number);
+
         buildFitnessClient();
-        getData(7);
 
         if (Build.VERSION.SDK_INT >= 21) {
             findViewById(R.id.pushup_button).setTransitionName(
                     getResources()
                             .getString(R.string.transition_id_counter_circle));
         }
-
         configureTransitions();
     }
 
     /**
-     * Build a {@link GoogleApiClient} that will authenticate the user and
-     * allow
-     * the application
-     * to connect to Fitness APIs. The scopes included should match the scopes
-     * your app needs
+     * Build a {@link GoogleApiClient}.
+     * <p/>
+     * It will authenticate the user and allow the application to connect to
+     * Fitness APIs. The scopes included should match the scopes your app needs
      * (see documentation for details). Authentication will occasionally fail
-     * intentionally,
-     * and in those cases, there will be a known resolution, which the
-     * OnConnectionFailedListener()
-     * can address. Examples of this include the user never having signed in
-     * before, or having
-     * multiple accounts on the device and needing to specify which account to
-     * use, etc.
+     * intentionally, and in those cases, there will be a known resolution,
+     * which the OnConnectionFailedListener() can address. Examples of this
+     * include the user never having signed in before, or having multiple
+     * accounts on the device and needing to specify which account to use, etc.
      */
     private void buildFitnessClient() {
         // Create the Google API Client
-        mClient = new GoogleApiClient.Builder(this)
+        apiClient = new GoogleApiClient.Builder(this)
                 .addApi(Fitness.API)
                 .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
@@ -176,8 +179,9 @@ public class MainActivity extends BaseActivity {
                 .build();
     }
 
-    protected DataReadRequest getData(int days) {
+    private DataReadRequest getData() {
         // Setting a start and end date using a range of 1 week before this moment.
+        int days = getStatTimeScope();
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
@@ -208,11 +212,22 @@ public class MainActivity extends BaseActivity {
                 .build();
     }
 
+    /**
+     * Get the scope from a spinner view.
+     *
+     * @return Number of days.
+     */
+    private int getStatTimeScope() {
+        // Zander TODO implement a spinner view and read it here
+        // For now, just return a scope of one day, so it defaults to today
+        return 1;
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
-        if (mClient.isConnected()) {
-            mClient.disconnect();
+        if (apiClient.isConnected()) {
+            apiClient.disconnect();
         }
     }
 
@@ -223,8 +238,8 @@ public class MainActivity extends BaseActivity {
             authInProgress = false;
             if (resultCode == RESULT_OK) {
                 // Make sure the app is not already connected or attempting to connect
-                if (!mClient.isConnecting() && !mClient.isConnected()) {
-                    mClient.connect();
+                if (!apiClient.isConnecting() && !apiClient.isConnected()) {
+                    apiClient.connect();
                 }
             }
         }
@@ -247,7 +262,7 @@ public class MainActivity extends BaseActivity {
         super.onStart();
         // Connect to the Fitness API
         Log.i(TAG, "Connecting...");
-        mClient.connect();
+        apiClient.connect();
     }
 
     @Override
@@ -274,7 +289,6 @@ public class MainActivity extends BaseActivity {
                                       long endTime) {
         Log.i(TAG, "Creating a new data insert request");
 
-
         // Create a data source
         DataSource dataSource = new DataSource.Builder()
                 .setAppPackageName(this)
@@ -288,7 +302,8 @@ public class MainActivity extends BaseActivity {
         // For each data point, specify a start time, end time, and the data value -- in this case,
         // the number of new steps.
         DataPoint dataPoint = dataSet.createDataPoint()
-                                     .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
+                                     .setTimeInterval(startTime, endTime,
+                                                      TimeUnit.MILLISECONDS);
         dataPoint.getValue(Field.FIELD_ACTIVITY).setInt((int) activity);
         dataSet.add(dataPoint);
         // [END build_insert_data_request]
@@ -296,27 +311,41 @@ public class MainActivity extends BaseActivity {
         return dataSet;
     }
 
-    protected void displayText() {
-        setContentView(R.layout.activity_main);
-        TextView life;
-        int day = (int)TimeUnit.SECONDS.toDays(lifeGained);
-        long hours = TimeUnit.SECONDS.toHours(lifeGained) - (day * 24);
-        long minute = TimeUnit.SECONDS.toMinutes(lifeGained) - (TimeUnit.SECONDS
-                                                               .toHours(lifeGained)* 60);
-        long second = TimeUnit.SECONDS.toSeconds(lifeGained) - (TimeUnit.SECONDS
-                                                               .toMinutes(lifeGained)
-                                                                *60);
-        life = (TextView)findViewById(R.id.life);
-        String str = String.valueOf(day) + "," + String.valueOf(hours) +
-                     "," + String.valueOf(minute) + "," + String.valueOf(second);
-        life.setText(str);
-        TextView money;
-        money = (TextView)findViewById(R.id.money);
-        String strMoney = String.valueOf(moneyEarned);
-        money.setText("$" + strMoney);
+    private void displayText() {
+//        int day = (int) TimeUnit.SECONDS.toDays(lifeGained);
+//        long hours = TimeUnit.SECONDS.toHours(lifeGained) - (day * 24);
+//        long minute = TimeUnit.SECONDS.toMinutes(lifeGained) -
+//                      (TimeUnit.SECONDS.toHours(lifeGained) * 60);
+//        long second = TimeUnit.SECONDS.toSeconds(lifeGained) -
+//                      (TimeUnit.SECONDS.toMinutes(lifeGained) * 60);
+        String lifeText;
+        int days = (int) TimeUnit.MILLISECONDS.toDays(lifeGained);
+        Log.d("Time", "Days = " + days);
+        int hours = (int) TimeUnit.MILLISECONDS.toHours(lifeGained);
+        Log.d("Time", "Hours = " + hours);
+        int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(lifeGained);
+        Log.d("Time", "Minutes = " + minutes);
+
+        if (days > 0) {
+            lifeText = timeToString(days, "day", "days");
+        } else if (hours > 0) {
+            lifeText = timeToString(hours, "hour", "hours");
+        } else if (minutes > 0) {
+            lifeText = timeToString(minutes, "minute", "minutes");
+        } else {
+            lifeText = "a few seconds";
+        }
+
+        lifeTextView.setText(lifeText + " of lifetime saved");
+        moneyTextView.setText("$" + String.valueOf(moneyEarned) + " earned");
     }
 
-    protected Integer[][] parseData(DataReadResult dataReadResult) {
+    private static String timeToString(int time, String singular,
+                                       String plural) {
+        return String.format("%d %s", time, (time > 1) ? plural : singular);
+    }
+
+    private Integer[][] parseData(DataReadResult dataReadResult) {
         Integer[][] activityArray = new Integer[107][2];
         activityArray[3][1] = 0;
         activityArray[0][1] = 0;
@@ -325,25 +354,21 @@ public class MainActivity extends BaseActivity {
                 List<DataSet> dataSets = bucket.getDataSets();
                 for (DataSet dataSet : dataSets) {
                     for (DataPoint dp : dataSet.getDataPoints()) {
-                        Value activityValue = dp.getValue(Field
-                                                                  .FIELD_ACTIVITY);
+                        Value activityValue = dp.getValue(Field.FIELD_ACTIVITY);
                         Value durationValue = dp.getValue(Field.FIELD_DURATION);
                         Integer activityInt = activityValue.asInt();
                         Integer durationInt = durationValue.asInt();
-                        if (activityArray[activityInt][0] == null){
+                        if (activityArray[activityInt][0] == null) {
                             activityArray[activityInt][0] = 0;
 
                         }
                         activityArray[activityInt][0] =
                                 activityArray[activityInt][0] + durationInt;
 
-
                     }
                 }
             }
-        }
-
-        else if (dataReadResult.getDataSets().size() > 0) {
+        } else if (dataReadResult.getDataSets().size() > 0) {
             for (DataSet dataSet : dataReadResult.getDataSets()) {
                 for (DataPoint dp : dataSet.getDataPoints()) {
                     Value activityValue = dp.getValue(Field
@@ -366,30 +391,35 @@ public class MainActivity extends BaseActivity {
         return activityArray;
     }
 
-    private void calculateLife(Integer[][] activityArray){
+    /**
+     * Calculate bonus life expectancy.
+     *
+     * @param activityArray
+     *         An array of exercises returned by parseData.
+     * @return Bonus life expectancy in milliseconds.
+     */
+    private long calculateLife(Integer[][] activityArray) {
         int totalMilliseconds = 0;
         for (Integer[] activity : activityArray) {
             int multiplier = 1;
-            if (activity[1] != null){
+            if (activity[1] != null) {
                 multiplier = activity[1];
             }
             if (activity[0] != null) {
-                totalMilliseconds = totalMilliseconds + (activity[0] * multiplier);
+                totalMilliseconds += activity[0] * multiplier;
             }
-
-
         }
-        int totalSeconds = (totalMilliseconds / 1000);
-        lifeGained = totalSeconds * 7;
+        return totalMilliseconds * 7;
     }
 
-    private void calculateMoney(){
+    private double calculateMoney() {
         double workWeek = 0.28;
-        double moneyEarnedLong = lifeGained * salary * workWeek / 365 / 24 / 60;
-        moneyEarned = round(moneyEarnedLong, 2);
+        double moneyEarnedLong = lifeGained * salary * workWeek /
+                                 (365 * 24 * 60 * 1000);
+        return round(moneyEarnedLong, 2);
     }
 
-    public static double round(double value, int places) {
+    private static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         BigDecimal bd = new BigDecimal(value);
@@ -482,7 +512,6 @@ public class MainActivity extends BaseActivity {
         );
     }
 
-
     private class InsertAndVerifyDataTask extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... params) {
             if (inputData != null) {
@@ -490,10 +519,11 @@ public class MainActivity extends BaseActivity {
                                                     inputData[2]);
                 Log.i(TAG, "Inserting the dataset in the History API");
                 com.google.android.gms.common.api.Status insertStatus =
-                        Fitness.HistoryApi.insertData(mClient, dataSet)
+                        Fitness.HistoryApi.insertData(apiClient, dataSet)
                                           .await(1, TimeUnit.MINUTES);
 
-                // Before querying the data, check to see if the insertion succeeded.
+                // Before querying the data, check to see if the
+                // insertion succeeded.
                 if (!insertStatus.isSuccess()) {
                     Log.i(TAG, "There was a problem inserting the dataset.");
                     return null;
@@ -504,13 +534,12 @@ public class MainActivity extends BaseActivity {
             }
 
 
-            DataReadRequest readRequest = getData(7);
+            DataReadRequest readRequest = getData();
             DataReadResult dataReadResult =
-                    Fitness.HistoryApi.readData(mClient,
-                                                readRequest)
+                    Fitness.HistoryApi.readData(apiClient, readRequest)
                                       .await(1, TimeUnit.MINUTES);
-            calculateLife(parseData(dataReadResult));
-            calculateMoney();
+            lifeGained = calculateLife(parseData(dataReadResult));
+            moneyEarned = calculateMoney();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -519,6 +548,5 @@ public class MainActivity extends BaseActivity {
             });
             return null;
         }
-
     }
 }
