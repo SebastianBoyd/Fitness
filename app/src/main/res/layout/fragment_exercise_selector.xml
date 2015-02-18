@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout android:id="@+id/pushup_button_container"
+                  style="@style/VerticalLayoutElement.AddExercise"
+                  android:onClick="startPushups">
+
+        <ImageView android:id="@+id/pushup_button"
+                   style="@style/CircleIcon.Pushups"
+                   android:contentDescription="@string/add_pushups_button"/>
+
+        <TextView android:id="@+id/pushup_button_label"
+                  style="@style/Text.Label.AddExercise"
+                  android:text="@string/add_pushups_button"/>
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/jump_button_container"
+                  style="@style/VerticalLayoutElement.AddExercise"
+                  android:onClick="startJumps">
+
+        <ImageView android:id="@+id/jump_button"
+                   style="@style/CircleIcon.Jumps"
+                   android:contentDescription="@string/add_jumps_button"
+                   android:onClick="startJumps"/>
+
+        <TextView android:id="@+id/jump_button_label"
+                  style="@style/Text.Label.AddExercise"
+                  android:text="@string/add_jumps_button"/>
+    </LinearLayout>
+</LinearLayout>

@@ -18,12 +18,8 @@ import android.widget.Toast;
 import java.util.Random;
 
 
-public class JumpCounterService extends Service{
-    private Looper mServiceLooper;
-    private long lastUpdate = 0;
-    private ServiceHandler mServiceHandler;
+public class JumpCounterService extends Service {
     private static final int SHAKE_THRESHOLD = 600;
-    private float last_x, last_y, last_z;
     // Binder given to clients
     private final IBinder mBinder = new LocalBinder();
     // Random number generator
@@ -33,6 +29,49 @@ public class JumpCounterService extends Service{
     protected long endTime = 0;
     protected SensorManager sensorManager;
     protected Sensor sensor;
+    private Looper mServiceLooper;
+    private long lastUpdate = 0;
+    private ServiceHandler mServiceHandler;
+    private float last_x, last_y, last_z;
+
+    @Override
+    public void onCreate() {
+        // Start up the thread running the service.  Note that we create a
+        // separate thread because the service normally runs in the process's
+        // main thread, which we don't want to block.  We also make it
+        // background priority so CPU-intensive work will not disrupt our UI.
+        HandlerThread thread = new HandlerThread("ServiceStartArguments");
+        thread.start();
+
+        mServiceLooper = thread.getLooper();
+        mServiceHandler = new ServiceHandler(mServiceLooper);
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+
+        // For each start request, send a message to start a job and deliver the
+        // start ID so we know which request we're stopping when we finish the job
+        Message msg = mServiceHandler.obtainMessage();
+        msg.arg1 = startId;
+        mServiceHandler.sendMessage(msg);
+
+        // If we get killed, after returning from here, restart
+        return START_STICKY;
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    /** method for clients */
+    public double getCurrentJumps() {
+        return exerciseCount;
+    }
+
 
     /**
      * Class used for the client Binder.  Because we know this service always
@@ -45,15 +84,18 @@ public class JumpCounterService extends Service{
         }
     }
 
+
     private final class ServiceHandler extends Handler
             implements SensorEventListener {
         public ServiceHandler(Looper looper) {
             super(looper);
         }
+
         @Override
         public void handleMessage(Message msg) {
             sensor =
-                    sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+                    sensorManager
+                            .getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
             // Stop the service using the startId, so that we don't stop
             // the service in the middle of handling another job
             stopSelf(msg.arg1);
@@ -73,8 +115,9 @@ public class JumpCounterService extends Service{
                     long diffTime = (curTime - lastUpdate);
                     lastUpdate = curTime;
 
-                    float speed = Math.abs(x + y + z - last_x - last_y - last_z) /
-                                  diffTime * 10000;
+                    float speed =
+                            Math.abs(x + y + z - last_x - last_y - last_z) /
+                            diffTime * 10000;
 
                     if (speed > SHAKE_THRESHOLD) {
                         exerciseCount = exerciseCount + 0.5;
@@ -96,42 +139,5 @@ public class JumpCounterService extends Service{
 
         }
 
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
-
-        // For each start request, send a message to start a job and deliver the
-        // start ID so we know which request we're stopping when we finish the job
-        Message msg = mServiceHandler.obtainMessage();
-        msg.arg1 = startId;
-        mServiceHandler.sendMessage(msg);
-
-        // If we get killed, after returning from here, restart
-        return START_STICKY;
-    }
-
-    @Override
-    public void onCreate() {
-        // Start up the thread running the service.  Note that we create a
-        // separate thread because the service normally runs in the process's
-        // main thread, which we don't want to block.  We also make it
-        // background priority so CPU-intensive work will not disrupt our UI.
-        HandlerThread thread = new HandlerThread("ServiceStartArguments");
-        thread.start();
-
-        mServiceLooper = thread.getLooper();
-        mServiceHandler = new ServiceHandler(mServiceLooper);
-
-    }
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-    /** method for clients */
-    public double getCurrentJumps() {
-        return exerciseCount;
     }
 }

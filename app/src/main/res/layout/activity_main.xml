@@ -7,74 +7,18 @@
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 tools:context=".MainActivity">
 
-    <LinearLayout android:id="@+id/pushup_button_container"
-                  style="@style/VerticalLayoutElement.AddExercise"
-                  android:onClick="startPushups">
+    <fragment android:id="@+id/exercise_selector"
+              android:name="com.sebastianboyd.fitness.fragments.ExerciseSelectorFragment"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"/>
 
-        <ImageView android:id="@+id/pushup_button"
-                   style="@style/CircleIcon.Pushups"
-                   android:contentDescription="@string/add_pushups_button"/>
-
-        <TextView android:id="@+id/pushup_button_label"
-                  style="@style/Text.Label.AddExercise"
-                  android:text="@string/add_pushups_button"/>
-    </LinearLayout>
-
-    <LinearLayout android:id="@+id/jump_button_container"
-                  style="@style/VerticalLayoutElement.AddExercise"
-                  android:layout_below="@id/pushup_button_container"
-                  android:onClick="startJumps">
-
-        <ImageView android:id="@+id/jump_button"
-                   style="@style/CircleIcon.Jumps"
-                   android:contentDescription="@string/add_jumps_button"
-                   android:onClick="startJumps"/>
-
-        <TextView android:id="@+id/jump_button_label"
-                  style="@style/Text.Label.AddExercise"
-                  android:text="@string/add_jumps_button"/>
-    </LinearLayout>
-
-    <LinearLayout android:id="@+id/stat_list_container"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentBottom="true"
-                  android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                  android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                  android:layout_marginRight="@dimen/activity_horizontal_margin"
-                  android:layout_marginStart="@dimen/activity_horizontal_margin"
-                  android:orientation="vertical">
-
-        <TextView style="@style/Text.Label.StatNumber"
-                  android:text="Today"
-                  android:textColor="@color/light_grey"
-                  android:textSize="24sp"/>
-
-        <View style="@style/HorizontalBreak"
-              android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-
-        <LinearLayout android:id="@+id/life_wrapper"
-                      style="@style/VerticalLayoutElement.StatWrapper">
-
-            <!--<TextView android:id="@+id/life_label"
-                      style="@style/Text.Label.StatLabel"
-                      android:text="@string/stat_label_life"/>-->
-
-            <TextView android:id="@+id/life_number"
-                      style="@style/Text.Label.StatNumber"/>
-        </LinearLayout>
-
-        <!--<View style="@style/HorizontalBreak"/>-->
-
-        <LinearLayout android:id="@+id/money_wrapper"
-                      style="@style/VerticalLayoutElement.StatWrapper">
-
-            <!--<TextView android:id="@+id/money_label"
-                      style="@style/Text.Label.StatLabel"
-                      android:text="@string/stat_label_money"/>-->
-
-            <TextView android:id="@+id/money_number"
-                      style="@style/Text.Label.StatNumber"/>
-        </LinearLayout>
-    </LinearLayout>
+    <fragment android:id="@+id/stat_view"
+              android:name="com.sebastianboyd.fitness.fragments.StatViewFragment"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentBottom="true"
+              android:layout_marginEnd="@dimen/activity_horizontal_margin"
+              android:layout_marginLeft="@dimen/activity_horizontal_margin"
+              android:layout_marginRight="@dimen/activity_horizontal_margin"
+              android:layout_marginStart="@dimen/activity_horizontal_margin"/>
 </RelativeLayout>

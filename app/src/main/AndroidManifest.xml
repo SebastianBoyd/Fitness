@@ -10,7 +10,6 @@
 
         <activity android:name=".MainActivity"
                   android:label="@string/title_app"
-                  android:screenOrientation="portrait"
                   android:theme="@style/Theme.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -37,7 +36,7 @@
                   android:label="@string/title_activity_preferences"
                   android:parentActivityName=".MainActivity"
                   android:theme="@style/Theme.Main">
-        <meta-data android:name="android.support.PARENT_ACTIVITY"
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value="com.sebastianboyd.fitness.MainActivity"/>
         </activity>
     </application>

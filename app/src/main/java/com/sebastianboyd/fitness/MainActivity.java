@@ -13,7 +13,6 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -30,9 +29,8 @@ import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
+import com.sebastianboyd.fitness.fragments.StatViewFragment;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -44,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 // Zander TODO rework activity transtions
 
 
-public class MainActivity extends BaseActivity {
+public final class MainActivity extends BaseActivity {
 
     private static final int REQUEST_OAUTH = 1;
     /**
@@ -67,7 +65,7 @@ public class MainActivity extends BaseActivity {
      */
     private int salary = 60000;
 
-    private TextView lifeTextView, moneyTextView;
+    private StatViewFragment statViewFragment;
 
     /**
      * Amount of bonus life gained through exercise in milliseconds.
@@ -88,8 +86,8 @@ public class MainActivity extends BaseActivity {
             authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
         }
 
-        lifeTextView = (TextView) findViewById(R.id.life_number);
-        moneyTextView = (TextView) findViewById(R.id.money_number);
+        statViewFragment = (StatViewFragment) getFragmentManager()
+                .findFragmentById(R.id.stat_view);
 
         buildFitnessClient();
 
@@ -261,7 +259,6 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         new InsertAndVerifyDataTask().execute();
-        Log.d("Lifecycle", "Resuming...");
     }
 
     @Override
@@ -323,40 +320,6 @@ public class MainActivity extends BaseActivity {
         // [END build_insert_data_request]
 
         return dataSet;
-    }
-
-    private void displayText() {
-//        int day = (int) TimeUnit.SECONDS.toDays(lifeGained);
-//        long hours = TimeUnit.SECONDS.toHours(lifeGained) - (day * 24);
-//        long minute = TimeUnit.SECONDS.toMinutes(lifeGained) -
-//                      (TimeUnit.SECONDS.toHours(lifeGained) * 60);
-//        long second = TimeUnit.SECONDS.toSeconds(lifeGained) -
-//                      (TimeUnit.SECONDS.toMinutes(lifeGained) * 60);
-        String lifeText;
-        int days = (int) TimeUnit.MILLISECONDS.toDays(lifeGained);
-        Log.d("Time", "Days = " + days);
-        int hours = (int) TimeUnit.MILLISECONDS.toHours(lifeGained);
-        Log.d("Time", "Hours = " + hours);
-        int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(lifeGained);
-        Log.d("Time", "Minutes = " + minutes);
-
-        if (days > 0) {
-            lifeText = timeToString(days, "day", "days");
-        } else if (hours > 0) {
-            lifeText = timeToString(hours, "hour", "hours");
-        } else if (minutes > 0) {
-            lifeText = timeToString(minutes, "minute", "minutes");
-        } else {
-            lifeText = "a few seconds";
-        }
-
-        lifeTextView.setText(lifeText + " of lifetime saved");
-        moneyTextView.setText("$" + String.valueOf(moneyEarned) + " earned");
-    }
-
-    private static String timeToString(int time, String singular,
-                                       String plural) {
-        return String.format("%d %s", time, (time > 1) ? plural : singular);
     }
 
     private Integer[][] parseData(DataReadResult dataReadResult) {
@@ -426,68 +389,10 @@ public class MainActivity extends BaseActivity {
         return totalMilliseconds * 7;
     }
 
-    private double calculateMoney() {
+    private double calculateMoney(long lifeGained) {
         double workWeek = 0.28;
-        double moneyEarnedLong = lifeGained * salary * workWeek /
-                                 (365 * 24 * 60 * 1000);
-        return round(moneyEarnedLong, 2);
+        return lifeGained * salary * workWeek / (365 * 24 * 60 * 1000);
     }
-
-    private static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
-
-    //For testing
-    // TODO delete on release
-    /*
-    private void printData(DataReadResult dataReadResult) {
-        // [START parse_read_data_result]
-        // If the DataReadRequest object specified aggregated data, dataReadResult will be returned
-        // as buckets containing DataSets, instead of just DataSets.
-        if (dataReadResult.getBuckets().size() > 0) {
-            Log.i(TAG, "Number of returned buckets of DataSets is: "
-                       + dataReadResult.getBuckets().size());
-            for (Bucket bucket : dataReadResult.getBuckets()) {
-                List<DataSet> dataSets = bucket.getDataSets();
-                for (DataSet dataSet : dataSets) {
-                    dumpDataSet(dataSet);
-                }
-            }
-        } else if (dataReadResult.getDataSets().size() > 0) {
-            Log.i(TAG, "Number of returned DataSets is: "
-                       + dataReadResult.getDataSets().size());
-            for (DataSet dataSet : dataReadResult.getDataSets()) {
-                dumpDataSet(dataSet);
-            }
-        }
-        // [END parse_read_data_result]
-    }
-
-
-    private void dumpDataSet(DataSet dataSet) {
-        Log.i(TAG,
-              "Data returned for Data type: " +
-              dataSet.getDataType().getName());
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-
-        for (DataPoint dp : dataSet.getDataPoints()) {
-            Log.i(TAG, "Data point:");
-            Log.i(TAG, "\tType: " + dp.getDataType().getName());
-            Log.i(TAG, "\tStart: " + dateFormat
-                    .format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            Log.i(TAG, "\tEnd: " +
-                       dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
-            for (Field field : dp.getDataType().getFields()) {
-                Log.i(TAG, "\tField: " + field.getName() +
-                           " Value: " + dp.getValue(field));
-            }
-        }
-    }
-    */
 
     public void startPushups(View view) {
         startActivity(
@@ -504,13 +409,6 @@ public class MainActivity extends BaseActivity {
             Bundle options = ActivityOptions.makeSceneTransitionAnimation(
                     this,
                     Pair.create(transitionView, transitionID)
-                    // FUTURE: Make this work at some point
-//                            Pair.create(findViewById(
-//                                                android.R.id.navigationBarBackground),
-//                                        Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME),
-//                            Pair.create(findViewById(
-//                                                android.R.id.statusBarBackground),
-//                                        Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME)
             ).toBundle();
             startActivity(intent, options);
         } else {
@@ -553,11 +451,11 @@ public class MainActivity extends BaseActivity {
                     Fitness.HistoryApi.readData(apiClient, readRequest)
                                       .await(1, TimeUnit.MINUTES);
             lifeGained = calculateLife(parseData(dataReadResult));
-            moneyEarned = calculateMoney();
+            moneyEarned = calculateMoney(lifeGained);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    displayText();
+                    statViewFragment.displayText(lifeGained, moneyEarned);
                 }
             });
             return null;

@@ -32,8 +32,8 @@ public abstract class CounterActivity extends BaseActivity implements
                                                            SensorEventListener {
     public final static String EXTRA_MESSAGE = "com.sebastianboyd" +
                                                ".fitness.MESSAGE";
-    static final String STATE_EXERCISE_COUNT = "exercise_count";
-    static final String STATE_PAUSED = "counter_paused";
+    private static final String STATE_EXERCISE_COUNT = "exercise_count";
+    private static final String STATE_PAUSED = "counter_paused";
 
     // TODO make reference to final field in api
 //    protected abstract static final int EXERCISE_ID; // TODO make this work
@@ -164,7 +164,7 @@ public abstract class CounterActivity extends BaseActivity implements
     /**
      * Ensure everything matches the pause state.
      */
-    public abstract void updatePauseState();
+    protected abstract void updatePauseState();
 
     @Override
     protected void onPause() {
@@ -178,10 +178,6 @@ public abstract class CounterActivity extends BaseActivity implements
         sensorManager.registerListener(this, sensor,
                                        SensorManager.SENSOR_DELAY_NORMAL);
         updatePauseState();
-        // TODO: this is an extension of the hacky configureTransition
-//        if (Build.VERSION.SDK_INT < 21) {
-//            updateExerciseCount();
-//        }
     }
 
     @Override

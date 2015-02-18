@@ -16,7 +16,6 @@
             style="@style/Button.Round.CounterCircle"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:elevation="8dp"
             android:onClick="togglePause"/>
 
     <TextView android:id="@+id/counter_ready_prompt"

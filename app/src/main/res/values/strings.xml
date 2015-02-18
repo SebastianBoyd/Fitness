@@ -30,6 +30,8 @@
     <string name="title_activity_preferences">Settings</string>
     <string name="income">Yearly Income (USD)</string>
 
+    <string name="stat_scope_today">Today</string>
+    <string name="stat_scope_all_time">All Time</string>
 
     <string name="stat_label_life"><!--Lifetime Saved--></string>
     <string name="stat_label_money"><!--Money Earned--></string>
