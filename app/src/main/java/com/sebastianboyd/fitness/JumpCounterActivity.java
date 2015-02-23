@@ -1,15 +1,12 @@
 package com.sebastianboyd.fitness;
 
 
-import android.content.ComponentName;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -32,6 +29,11 @@ public final class JumpCounterActivity extends CounterActivity {
 
         sensor =
                 sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        Context context = getApplicationContext();
+        if (SaveData.getIntPref(context, String.valueOf(EXERCISE_ID) + "intro")
+            == 0) {
+            intro();
+        }
 
 
     }
@@ -76,6 +78,32 @@ public final class JumpCounterActivity extends CounterActivity {
         startActivity(intent);
     }
 
+    public void intro(){
+        //TODO make abstract and not hack
+        Context context = getApplicationContext();
+        SaveData.setIntPref(context,
+                            String.valueOf(EXERCISE_ID) + "intro",
+                            1);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Counting Jumps")
+                .setMessage("To start counting jumps just put your phone in " +
+                            "your " +
+                            "pocket and start jumping.")
+                .setPositiveButton("OK", null)
+                .setCancelable(false)
+                .create();
+
+        AlertDialog saveDataDialog = new AlertDialog.Builder(this)
+                .setTitle("Saving your data")
+                .setMessage("When you are done doing jumps press the big " +
+                            "circle to continue.")
+                .setPositiveButton("OK", null)
+                .setCancelable(false)
+                .create();
+        saveDataDialog.show();
+        dialog.show();
+
+    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
