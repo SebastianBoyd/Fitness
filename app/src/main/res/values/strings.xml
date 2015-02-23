@@ -10,14 +10,14 @@
 
     <string name="title_activity_jumping_jack">Jumps</string>
 
-    <string name="increment">Increment</string>
-    <string name="decrement">Decrement</string>
+    <string name="increment" translatable="false">Increment</string>
+    <string name="decrement" translatable="false">Decrement</string>
     <string name="done">Done</string>
     <string name="reset">Reset</string>
 
     <string name="counter_readyPrompt">Ready to go!</string>
 
-    <string name="transition_id_counter_circle">
+    <string name="transition_id_counter_circle" translatable="false">
         transition_id_counter_circle
     </string>
 
@@ -33,12 +33,29 @@
     <string name="stat_scope_today">Today</string>
     <string name="stat_scope_all_time">All Time</string>
 
-    <string name="stat_label_life"><!--Lifetime Saved--></string>
-    <string name="stat_label_money"><!--Money Earned--></string>
+    <string name="stat_label_life" translatable="false"><!--Lifetime Saved--></string>
+    <string name="stat_label_money" translatable="false"><!--Money Earned--></string>
     <string name="stat_description_life">
         Approximate amount of lifetime saved through exercise.
     </string>
     <string name="stat_description_money">
         Amount of money you could earn in the lifetime you have saved.
     </string>
+    <string name="time_day_singular">day</string>
+    <string name="time_day_plural">days</string>
+    <string name="time_minute_singular">minute</string>
+    <string name="time_minute_plural">minutes</string>
+    <string name="time_hour_singular">hour</string>
+    <string name="time_hour_plural">hours</string>
+    <string name="time_seconds">a few seconds</string>
+    <string name="lifetimesaved_text"> of lifetime saved</string>
+    <string name="currency">$</string>
+    <string name="moneyearned_text">earned in that time</string>
+    <string name="dialog_intro_jumps_title">How to count jumps</string>
+    <string name="dialog_intro_jumps_message">To start counting jumps just put your phone in your pocket and start jumping.</string>
+    <string name="dialog_intro_accept">OK</string>
+    <string name="dialog_intro_save_title">How to save your data</string>
+    <string name="dialog_intro_save_message">When you are done exercising press the big circle to continue.</string>
+    <string name="dialog_intro_pushups_title">How to count pushups</string>
+    <string name="dialog_intro_pushups_message">To start counting pushups put your phone on the floor and start doing pushups with your head above your phone.</string>
 </resources>

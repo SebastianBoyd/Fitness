@@ -64,18 +64,19 @@ public final class PushupCounterActivity extends CounterActivity {
                             String.valueOf(EXERCISE_ID) + "intro",
                             1);
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Counting Pushups")
-                .setMessage("To start counting pushups put your phone on the " +
-                            "ground under your head and start doing pushups " +
-                            "over it")
-                .setPositiveButton("OK", null)
+                .setTitle(getResources().getString(R.string
+                                                           .dialog_intro_pushups_title))
+                .setMessage(getResources().getString(R.string
+                                                             .dialog_intro_pushups_message))
+                .setPositiveButton(getResources().getString(R.string.dialog_intro_accept), null)
                 .setCancelable(false)
                 .create();
+
         AlertDialog saveDataDialog = new AlertDialog.Builder(this)
-                .setTitle("Saving your data")
-                .setMessage("When you are done doing pushups press the big " +
-                            "circle to continue.")
-                .setPositiveButton("OK", null)
+                .setTitle(getResources().getString(R.string.dialog_intro_save_title))
+                .setMessage(getResources().getString(R.string.dialog_intro_save_message))
+                .setPositiveButton(getResources().getString(R.string.dialog_intro_accept),
+                                   null)
                 .setCancelable(false)
                 .create();
         saveDataDialog.show();

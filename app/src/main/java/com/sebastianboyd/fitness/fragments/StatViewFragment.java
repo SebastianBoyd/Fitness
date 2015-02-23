@@ -42,18 +42,29 @@ public class StatViewFragment extends Fragment {
         int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(lifeGained);
 
         if (days > 0) {
-            lifeText = timeToString(days, "day", "days");
+            lifeText = timeToString(days, getResources()
+                                            .getString(R.string.time_day_singular), getResources().getString(R.string
+                                                                     .time_day_plural));
         } else if (hours > 0) {
-            lifeText = timeToString(hours, "hour", "hours");
+            lifeText = timeToString(hours, getResources()
+                    .getString(R.string.time_hour_singular), getResources()
+                    .getString(R.string.time_hour_plural));
         } else if (minutes > 0) {
-            lifeText = timeToString(minutes, "minute", "minutes");
+            lifeText = timeToString(minutes, getResources()
+                    .getString(R.string.time_minute_singular), getResources()
+                    .getString(R.string.time_minute_plural));
         } else {
-            lifeText = "a few seconds";
+            lifeText = getResources()
+                    .getString(R.string.time_seconds);
         }
 
-        lifeTextView.setText(lifeText + " of lifetime saved");
-        moneyTextView.setText(String.format("$%.2f earned in that time",
-                                            moneyEarned));
+        lifeTextView.setText(lifeText + " " + getResources()
+                .getString(R.string.lifetimesaved_text));
+        moneyTextView.setText(getResources()
+                                      .getString(R.string
+                                                         .currency) + String.format
+                ("%.2f ", moneyEarned) + getResources()
+                .getString(R.string.moneyearned_text));
     }
 
     private static String timeToString(int time, String singular,

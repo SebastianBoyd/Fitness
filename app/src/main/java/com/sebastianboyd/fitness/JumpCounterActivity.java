@@ -79,25 +79,22 @@ public final class JumpCounterActivity extends CounterActivity {
     }
 
     public void intro(){
-        //TODO make abstract and not hack
         Context context = getApplicationContext();
         SaveData.setIntPref(context,
                             String.valueOf(EXERCISE_ID) + "intro",
                             1);
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Counting Jumps")
-                .setMessage("To start counting jumps just put your phone in " +
-                            "your " +
-                            "pocket and start jumping.")
-                .setPositiveButton("OK", null)
+                .setTitle(getResources().getString(R.string.dialog_intro_jumps_title))
+                .setMessage(getResources().getString(R.string.dialog_intro_jumps_message))
+                .setPositiveButton(getResources().getString(R.string.dialog_intro_accept), null)
                 .setCancelable(false)
                 .create();
 
         AlertDialog saveDataDialog = new AlertDialog.Builder(this)
-                .setTitle("Saving your data")
-                .setMessage("When you are done doing jumps press the big " +
-                            "circle to continue.")
-                .setPositiveButton("OK", null)
+                .setTitle(getResources().getString(R.string.dialog_intro_save_title))
+                .setMessage(getResources().getString(R.string.dialog_intro_save_message))
+                .setPositiveButton(getResources().getString(R.string.dialog_intro_accept),
+                                   null)
                 .setCancelable(false)
                 .create();
         saveDataDialog.show();
