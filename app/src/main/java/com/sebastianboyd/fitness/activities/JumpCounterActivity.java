@@ -1,4 +1,4 @@
-package com.sebastianboyd.fitness;
+package com.sebastianboyd.fitness.activities;
 
 
 import android.app.AlertDialog;
@@ -10,15 +10,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.sebastianboyd.fitness.PrefCache;
+import com.sebastianboyd.fitness.R;
+import com.sebastianboyd.fitness.services.JumpCounterService;
+
 
 public final class JumpCounterActivity extends CounterActivity {
 
     private static final int EXERCISE_ID = 9; // Aerobics
     private static final int SHAKE_THRESHOLD = 600;
-    private long lastUpdate = 0;
-    private float last_x, last_y, last_z;
     JumpCounterService mService;
     boolean mBound = false;
+    private long lastUpdate = 0;
+    private float last_x, last_y, last_z;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +31,10 @@ public final class JumpCounterActivity extends CounterActivity {
         startService(intent);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        sensor =
-                sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        sensor = sensorManager.getDefaultSensor(
+                Sensor.TYPE_LINEAR_ACCELERATION);
         Context context = getApplicationContext();
-        if (SaveData.getIntPref(context, String.valueOf(EXERCISE_ID) + "intro")
+        if (PrefCache.getIntPref(context, String.valueOf(EXERCISE_ID) + "intro")
             == 0) {
             intro();
         }
@@ -73,14 +77,13 @@ public final class JumpCounterActivity extends CounterActivity {
 
     @Override
     public void sendData(View view) {
-        //Log.v("YOLO", String.valueOf(mService.exerciseCount));
         Intent intent = buildDataSenderIntent(EXERCISE_ID);
         startActivity(intent);
     }
 
     public void intro(){
         Context context = getApplicationContext();
-        SaveData.setIntPref(context,
+        PrefCache.setIntPref(context,
                             String.valueOf(EXERCISE_ID) + "intro",
                             1);
         AlertDialog dialog = new AlertDialog.Builder(this)

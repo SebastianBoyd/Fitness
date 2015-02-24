@@ -11,7 +11,7 @@ import com.sebastianboyd.fitness.R;
 
 
 /**
- * Fragment displays a list of links to {@link com.sebastianboyd.fitness.CounterActivity}.
+ * Fragment displays a list of links to {@link com.sebastianboyd.fitness.activities.CounterActivity}.
  */
 public class ExerciseSelectorFragment extends Fragment {
 

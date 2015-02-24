@@ -1,4 +1,4 @@
-package com.sebastianboyd.fitness;
+package com.sebastianboyd.fitness.activities;
 
 
 import android.app.AlertDialog;
@@ -8,6 +8,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.sebastianboyd.fitness.PrefCache;
+import com.sebastianboyd.fitness.R;
 
 
 public final class PushupCounterActivity extends CounterActivity {
@@ -22,7 +25,7 @@ public final class PushupCounterActivity extends CounterActivity {
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         range = sensor.getMaximumRange();
         Context context = getApplicationContext();
-        if (SaveData.getIntPref(context, String.valueOf(EXERCISE_ID) + "intro")
+        if (PrefCache.getIntPref(context, String.valueOf(EXERCISE_ID) + "intro")
             == 0) {
             intro();
         }
@@ -40,6 +43,37 @@ public final class PushupCounterActivity extends CounterActivity {
         startActivity(intent);
     }
 
+    public void intro() {
+        //TODO make abstract and not hack
+        Context context = getApplicationContext();
+        PrefCache.setIntPref(context,
+                             String.valueOf(EXERCISE_ID) + "intro",
+                             1);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string
+                                                           .dialog_intro_pushups_title))
+                .setMessage(getResources().getString(R.string
+                                                             .dialog_intro_pushups_message))
+                .setPositiveButton(
+                        getResources().getString(R.string.dialog_intro_accept),
+                        null)
+                .setCancelable(false)
+                .create();
+
+        AlertDialog saveDataDialog = new AlertDialog.Builder(this)
+                .setTitle(getResources()
+                                  .getString(R.string.dialog_intro_save_title))
+                .setMessage(getResources().getString(
+                        R.string.dialog_intro_save_message))
+                .setPositiveButton(
+                        getResources().getString(R.string.dialog_intro_accept),
+                        null)
+                .setCancelable(false)
+                .create();
+        saveDataDialog.show();
+        dialog.show();
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         float in = event.values[0];
@@ -55,32 +89,5 @@ public final class PushupCounterActivity extends CounterActivity {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
-
-    public void intro(){
-        //TODO make abstract and not hack
-        Context context = getApplicationContext();
-        SaveData.setIntPref(context,
-                            String.valueOf(EXERCISE_ID) + "intro",
-                            1);
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(getResources().getString(R.string
-                                                           .dialog_intro_pushups_title))
-                .setMessage(getResources().getString(R.string
-                                                             .dialog_intro_pushups_message))
-                .setPositiveButton(getResources().getString(R.string.dialog_intro_accept), null)
-                .setCancelable(false)
-                .create();
-
-        AlertDialog saveDataDialog = new AlertDialog.Builder(this)
-                .setTitle(getResources().getString(R.string.dialog_intro_save_title))
-                .setMessage(getResources().getString(R.string.dialog_intro_save_message))
-                .setPositiveButton(getResources().getString(R.string.dialog_intro_accept),
-                                   null)
-                .setCancelable(false)
-                .create();
-        saveDataDialog.show();
-        dialog.show();
-
     }
 }

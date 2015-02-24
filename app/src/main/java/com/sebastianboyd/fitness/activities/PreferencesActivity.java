@@ -1,4 +1,4 @@
-package com.sebastianboyd.fitness;
+package com.sebastianboyd.fitness.activities;
 
 
 import android.content.Context;
@@ -8,8 +8,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.sebastianboyd.fitness.PrefCache;
+import com.sebastianboyd.fitness.R;
 
-public class PreferencesActivity extends BaseActivity {
+
+public final class PreferencesActivity extends BaseActivity {
 
     EditText incomeEditText;
 
@@ -20,7 +23,7 @@ public class PreferencesActivity extends BaseActivity {
         incomeEditText = (EditText) findViewById(R.id.editText);
 
         Context context = getApplicationContext();
-        int income = SaveData.getIntPref(context, SaveData.INCOME);
+        int income = PrefCache.getIntPref(context, PrefCache.INCOME);
         incomeEditText.setText(Integer.toString(income));
     }
 
@@ -44,7 +47,7 @@ public class PreferencesActivity extends BaseActivity {
             return;
         }
         Context context = getApplicationContext();
-        SaveData.setIntPref(context, SaveData.INCOME, income);
+        PrefCache.setIntPref(context, PrefCache.INCOME, income);
     }
 
     @Override

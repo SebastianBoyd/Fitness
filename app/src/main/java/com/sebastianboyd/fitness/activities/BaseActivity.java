@@ -1,4 +1,4 @@
-package com.sebastianboyd.fitness;
+package com.sebastianboyd.fitness.activities;
 
 
 import android.app.ActivityManager;
@@ -10,6 +10,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.transition.Fade;
 import android.transition.Transition;
 import android.view.Window;
+
+import com.sebastianboyd.fitness.R;
 
 
 /**

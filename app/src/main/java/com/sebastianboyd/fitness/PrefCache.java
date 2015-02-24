@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 
-public class SaveData {
+public class PrefCache {
 
     public static final String INCOME = "income";
     public static final String TOTAL_COUNT = "totalCount";

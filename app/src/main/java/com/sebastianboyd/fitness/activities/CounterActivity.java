@@ -1,4 +1,4 @@
-package com.sebastianboyd.fitness;
+package com.sebastianboyd.fitness.activities;
 
 
 // Zander TODO add animations
@@ -24,6 +24,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.sebastianboyd.fitness.Callback;
+import com.sebastianboyd.fitness.PrefCache;
+import com.sebastianboyd.fitness.R;
+
 
 /**
  * Base class for counter activities that use sensors.
@@ -34,11 +38,6 @@ public abstract class CounterActivity extends BaseActivity implements
                                                ".fitness.MESSAGE";
     private static final String STATE_EXERCISE_COUNT = "exercise_count";
     private static final String STATE_PAUSED = "counter_paused";
-
-    // TODO make reference to final field in api
-//    protected abstract static final int EXERCISE_ID; // TODO make this work
-    // I would like to make sendData() automatically inherited, but fields
-    // aren't allowed to be abstract or overwritten for superclass methods.
 
     protected SensorManager sensorManager;
     protected Sensor sensor;
@@ -201,22 +200,10 @@ public abstract class CounterActivity extends BaseActivity implements
         Callback positiveCallback = new Callback() {
             @Override
             public void fire() {
-                discard();
                 finish();
             }
         };
         promptDiscard(positiveCallback);
-    }
-
-    /**
-     * Dump data as necessary.
-     */
-    public void discard() {
-        // TODO: (on release) review this
-        // Should it be removed, or should we keep it just in case we ever
-        // need it?
-        // May be unnecessary, the activity may clear all of our data for us.
-        // I don't know, so this is up to you, Sebastian.
     }
 
     public void promptDiscard(final Callback positiveCallback) {
@@ -298,22 +285,22 @@ public abstract class CounterActivity extends BaseActivity implements
     protected Intent buildDataSenderIntent(int exerciseID) {
         Context context = getApplicationContext();
         // Save total exercise count
-        int previousTotalCount = SaveData.getIntPref(
-                context, String.valueOf(exerciseID) + SaveData.TOTAL_COUNT);
-        SaveData.setIntPref(context,
-                            String.valueOf(exerciseID) + SaveData.TOTAL_COUNT,
-                            previousTotalCount + (int) exerciseCount);
+        int previousTotalCount = PrefCache.getIntPref(
+                context, String.valueOf(exerciseID) + PrefCache.TOTAL_COUNT);
+        PrefCache.setIntPref(context,
+                             String.valueOf(exerciseID) + PrefCache.TOTAL_COUNT,
+                             previousTotalCount + (int) exerciseCount);
         // Save total time
         long thisTime = endTime - startTime;
-        int previousTotalTime = SaveData.getIntPref(
-                context, String.valueOf(exerciseID) + SaveData.TOTAL_TIME);
-        SaveData.setIntPref(context,
-                            String.valueOf(exerciseID) + SaveData.TOTAL_TIME,
-                            previousTotalTime + (int) thisTime);
+        int previousTotalTime = PrefCache.getIntPref(
+                context, String.valueOf(exerciseID) + PrefCache.TOTAL_TIME);
+        PrefCache.setIntPref(context,
+                             String.valueOf(exerciseID) + PrefCache.TOTAL_TIME,
+                             previousTotalTime + (int) thisTime);
         // Zander TODO implement this and display to user
-        Log.v("Stats", String.valueOf(SaveData.getIntPref(
+        Log.v("Stats", String.valueOf(PrefCache.getIntPref(
                 context, String.valueOf(exerciseID) + "totalCount")));
-        Log.v("Stats", String.valueOf(SaveData.getIntPref(
+        Log.v("Stats", String.valueOf(PrefCache.getIntPref(
                 context, String.valueOf(exerciseID) + "totalTime")));
 
         Intent intent = new Intent(this, MainActivity.class);

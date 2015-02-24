@@ -1,4 +1,4 @@
-package com.sebastianboyd.fitness;
+package com.sebastianboyd.fitness.activities;
 
 
 import android.app.ActivityOptions;
@@ -29,6 +29,8 @@ import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
+import com.sebastianboyd.fitness.PrefCache;
+import com.sebastianboyd.fitness.R;
 import com.sebastianboyd.fitness.fragments.StatViewFragment;
 
 import java.text.SimpleDateFormat;
@@ -98,11 +100,11 @@ public final class MainActivity extends BaseActivity {
         }
         configureTransitions();
         Context context = getApplicationContext();
-        int income = SaveData.getIntPref(context, SaveData.INCOME);
+        int income = PrefCache.getIntPref(context, PrefCache.INCOME);
         if (income != 0) {
             salary = income;
         } else {
-            SaveData.setIntPref(context, SaveData.INCOME, salary);
+            PrefCache.setIntPref(context, PrefCache.INCOME, salary);
         }
         Log.v("Data", String.valueOf(salary));
     }
